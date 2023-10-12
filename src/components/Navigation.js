@@ -1,10 +1,8 @@
 import React, { useState, useRef } from "react";
 import styled, { css } from "styled-components";
 
-function Navigation({ onPageSelect, handleSearch }) {
-  const inputValue = useRef(null);
-  const filterNameOption = useRef(null);
-  const filterTypeOption = useRef(null);
+function Navigation({ onPageSelect, onSearch }) {
+  const input = useRef(null);
 
   const [filterOptionsShown, setFilterOptionsShown] = useState(false);
   const [filterValue, setFilterValue] = useState("name");
@@ -21,15 +19,18 @@ function Navigation({ onPageSelect, handleSearch }) {
     setFilterValue(e.target.value);
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
 
-    transferInputValue(inputValue.current.value.toLowerCase());
-
     if (filterValue === "name") {
-      onPageSelect("name");
+      onPageSelect("pokedex");
     } else if (filterValue === "type") {
       onPageSelect("type");
+    }
+
+    if (input !== null) {
+      const pokemon = input.current.value;
+      onSearch(pokemon);
     }
   }
 
@@ -63,7 +64,7 @@ function Navigation({ onPageSelect, handleSearch }) {
               <InputLabel>
                 Find your Pokemon!
                 <SearchInput
-                  ref={inputValue}
+                  ref={input}
                   type="text"
                   placeholder="Please enter ID or name"
                 />
@@ -76,7 +77,6 @@ function Navigation({ onPageSelect, handleSearch }) {
               <FilterOptionsWrapper $shown={filterOptionsShown}>
                 <FilterOption>
                   <InputOption
-                    ref={filterNameOption}
                     type="radio"
                     name="filterOption"
                     value="name"
@@ -88,7 +88,6 @@ function Navigation({ onPageSelect, handleSearch }) {
 
                 <FilterOption>
                   <InputOption
-                    ref={filterTypeOption}
                     type="radio"
                     name="filterOption"
                     value="type"

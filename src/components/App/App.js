@@ -10,6 +10,8 @@ import Navigation from "../Navigation";
 function App() {
   const [currentView, setCurrentView] = useState("home");
 
+  const [pokemon, setPokemon] = useState(null);
+
   function switchView(value) {
     setCurrentView(value);
   }
@@ -18,14 +20,10 @@ function App() {
     <>
       <StyledApp>
         <StyledAppHeader>
-          <Navigation
-            onPageSelect={switchView}
-            onPokedexSearch={123}
-            onCatalogSearch={123}
-          />
+          <Navigation onPageSelect={switchView} onSearch={setPokemon} />
 
           {currentView === "home" && <Home />}
-          {currentView === "pokedex" && <Pokedex />}
+          {currentView === "pokedex" && <Pokedex pokemon={pokemon} />}
           {currentView === "catalog" && <Catalog />}
         </StyledAppHeader>
       </StyledApp>

@@ -1,7 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled, { css, keyframes } from "styled-components";
-
-import Navigation from "../components/Navigation";
 
 function getObjectValue(object, value, key) {
   let arr = [];
@@ -36,7 +34,7 @@ function removeDuplicate(arr) {
   return Array.from(set);
 }
 
-function Pokedex() {
+function Pokedex({ pokemon }) {
   const [pokemonInfo, setPokemonInfo] = useState({
     touched: false,
   });
@@ -48,13 +46,9 @@ function Pokedex() {
     text: null,
   });
 
-  // const [pokemonCatalog, setPokemonCatalog] = useState({
-  //   touched: false,
-  // });
-  //
-  // const [pokemonCatalogList, setPokemonCatalogList] = useState({});
-  //
-  // const [pokemonCatalogIterator, setPokemonCatalogIterator] = useState(0);
+  useEffect(() => {
+    createPokedexCard(pokemon);
+  }, [pokemon]);
 
   async function getPokemonSpecie(value) {
     const response = await fetch(
@@ -80,30 +74,28 @@ function Pokedex() {
     return description;
   }
 
-  async function createPokedexCard(value) {
-    if (value != null) {
-      const pokemonSpecie = await getPokemonSpecie(value);
-      const pokemonStats = await getPokemonStats(
-        pokemonSpecie.varieties[0].pokemon.name
-      );
+  async function createPokedexCard(pokemon) {
+    if (pokemon != null) {
+      const specie = await getPokemonSpecie(pokemon);
+      const stats = await getPokemonStats(specie.varieties[0].pokemon.name);
 
       setPokemonInfo((prevState) => ({
         ...prevState,
         touched: true,
-        id: getFormattedId(pokemonSpecie.id),
-        name: getFormattedName(pokemonSpecie.name),
-        forms: getObjectValue(pokemonSpecie.varieties, "pokemon", "name"),
-        selectedForm: pokemonSpecie.varieties[0].pokemon.name,
-        description: findPokemonDescription(pokemonSpecie),
-        imageFront: pokemonStats.sprites["front_default"],
-        imageBack: pokemonStats.sprites["back_default"],
-        types: getObjectValue(pokemonStats.types, "type", "name"),
-        height: pokemonStats.height,
-        weight: pokemonStats.weight,
+        id: getFormattedId(specie.id),
+        name: getFormattedName(specie.name),
+        forms: getObjectValue(specie.varieties, "pokemon", "name"),
+        selectedForm: specie.varieties[0].pokemon.name,
+        description: findPokemonDescription(specie),
+        imageFront: stats.sprites["front_default"],
+        imageBack: stats.sprites["back_default"],
+        types: getObjectValue(stats.types, "type", "name"),
+        height: stats.height,
+        weight: stats.weight,
         abilities: removeDuplicate(
-          getObjectValue(pokemonStats.abilities, "ability", "name")
+          getObjectValue(stats.abilities, "ability", "name")
         ),
-        stats: getObjectValue(pokemonStats.stats, "base_stat"),
+        stats: getObjectValue(stats.stats, "base_stat"),
       }));
 
       setFormOptionsShown(false);
@@ -113,8 +105,6 @@ function Pokedex() {
         text: null,
       }));
     }
-
-    console.log(pokemonInfo);
   }
 
   // async function getTypePokemons(type) {
