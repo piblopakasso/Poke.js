@@ -1,19 +1,39 @@
-import React, { useState } from "react";
-import styled, { css, keyframes } from "styled-components";
-import Pokedex from "./Pokedex";
+import React, { useEffect, useState } from "react";
+import styled, { css } from "styled-components";
+
+function getObjectValue(object, value, key) {
+  let arr = [];
+
+  for (const item of Object.values(object)) {
+    if (key === undefined) {
+      arr.push(item[value]);
+    } else {
+      arr.push(item[value][key]);
+    }
+  }
+
+  return arr;
+}
 
 function capitalizeFirstLetter(text) {
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
-function Catalog() {
+function getFormattedName(name) {
+  return name.toUpperCase();
+}
+
+function Catalog({ pokemonType }) {
   const [pokemonCatalog, setPokemonCatalog] = useState({
     touched: false,
   });
 
   const [pokemonCatalogList, setPokemonCatalogList] = useState({});
-
   const [pokemonCatalogIterator, setPokemonCatalogIterator] = useState(0);
+
+  useEffect(() => {
+    createCatalog(pokemonType);
+  }, [pokemonType]);
 
   async function getPokemonStats(value) {
     const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${value}`);
@@ -69,9 +89,9 @@ function Catalog() {
     }
   }
 
-  async function createCatalog(value) {
-    if (value != null) {
-      const pokemonList = await getTypePokemons(value);
+  async function createCatalog(type) {
+    if (type != null) {
+      const pokemonList = await getTypePokemons(type);
       await showPokemonPreviews(pokemonList, 0);
     }
   }

@@ -34,7 +34,7 @@ function removeDuplicate(arr) {
   return Array.from(set);
 }
 
-function Pokedex({ pokemon }) {
+function Pokedex({ pokemonName }) {
   const [pokemonInfo, setPokemonInfo] = useState({
     touched: false,
   });
@@ -47,8 +47,8 @@ function Pokedex({ pokemon }) {
   });
 
   useEffect(() => {
-    createPokedexCard(pokemon);
-  }, [pokemon]);
+    createPokedexCard(pokemonName);
+  }, [pokemonName]);
 
   async function getPokemonSpecie(value) {
     const response = await fetch(
@@ -106,62 +106,6 @@ function Pokedex({ pokemon }) {
       }));
     }
   }
-
-  // async function getTypePokemons(type) {
-  //   const response = await fetch(`https://pokeapi.co/api/v2/type/${type}`);
-  //   const info = await response.json();
-  //   let list = [];
-  //
-  //   for (let key of info.pokemon) {
-  //     list.push(key.pokemon.name);
-  //   }
-  //
-  //   setPokemonCatalog({
-  //     touched: true,
-  //     type: type,
-  //     pokemons: list,
-  //   });
-  //
-  //   setPokemonCatalogList({});
-  //
-  //   return list;
-  // }
-  //
-  // async function createPokemonCardPreview(pokemonName) {
-  //   const previewData = await getPokemonStats(pokemonName);
-  //
-  //   setPokemonCatalogList((prevState) => ({
-  //     ...prevState,
-  //     [pokemonName]: {
-  //       formName: getFormattedName(previewData.name),
-  //       specieName: getFormattedName(previewData.species.name),
-  //       image: previewData.sprites["front_default"],
-  //       types: getObjectValue(previewData.types, "type", "name"),
-  //     },
-  //   }));
-  // }
-  //
-  // async function showPokemonPreviews(arr, iterator) {
-  //   // to show 12 preview pokemon cards
-  //   if (iterator < arr.length - 12) {
-  //     for (let i = iterator; i < iterator + 12; i++) {
-  //       await createPokemonCardPreview(arr[i]);
-  //     }
-  //     setPokemonCatalogIterator(iterator + 12);
-  //   } else {
-  //     for (let i = iterator; i < iterator + (arr.length - iterator); i++) {
-  //       await createPokemonCardPreview(arr[i]);
-  //     }
-  //     setPokemonCatalogIterator(iterator + (arr.length - iterator));
-  //   }
-  // }
-  //
-  // async function createCatalog(value) {
-  //   if (value != null) {
-  //     const pokemonList = await getTypePokemons(value);
-  //     await showPokemonPreviews(pokemonList, 0);
-  //   }
-  // }
 
   function flipImage(e) {
     if (pokemonInfo.imageBack === null) {
@@ -265,49 +209,6 @@ function Pokedex({ pokemon }) {
 
   return (
     <>
-      {/*<Navigation*/}
-      {/*  onNameFilter={createPokedexCard}*/}
-      {/*  onTypeFilter={createCatalog}*/}
-      {/*/>*/}
-
-      {/*{pokemonCatalog.touched && (*/}
-      {/*  <PokemonCatalogWrapper>*/}
-      {/*    {Object.values(pokemonCatalogList).map((content, index) => (*/}
-      {/*      <PokemonPreview>*/}
-      {/*        <PokemonPreviewImage*/}
-      {/*          $borderColor={colors[pokemonCatalog.type]}*/}
-      {/*          src={content.image}*/}
-      {/*          alt="Pokemon image"*/}
-      {/*        />*/}
-      {/*        <PokemonPreviewName $textColor={colors[pokemonCatalog.type]}>*/}
-      {/*          {capitalizeFirstLetter(content.formName)}*/}
-      {/*        </PokemonPreviewName>*/}
-      {/*        <PokemonPreviewTypesWrapper>*/}
-      {/*          {content.types.map((text, index) => (*/}
-      {/*            <PokemonPreviewTypes*/}
-      {/*              $backgroundColor={colors[text]}*/}
-      {/*              key={index}*/}
-      {/*            >*/}
-      {/*              {capitalizeFirstLetter(text)}*/}
-      {/*            </PokemonPreviewTypes>*/}
-      {/*          ))}*/}
-      {/*        </PokemonPreviewTypesWrapper>*/}
-      {/*      </PokemonPreview>*/}
-      {/*    ))}*/}
-
-      {/*    <ShowMoreButton*/}
-      {/*      onClick={() =>*/}
-      {/*        showPokemonPreviews(*/}
-      {/*          pokemonCatalog.pokemons,*/}
-      {/*          pokemonCatalogIterator*/}
-      {/*        )*/}
-      {/*      }*/}
-      {/*    >*/}
-      {/*      Show more Pokemons!*/}
-      {/*    </ShowMoreButton>*/}
-      {/*  </PokemonCatalogWrapper>*/}
-      {/*)}*/}
-
       {pokemonInfo.touched && (
         <div className="card">
           <IdWrapper $backgroundColor={colors[pokemonInfo.types[0]]}>
@@ -845,54 +746,3 @@ const StatName = styled.span`
   width: 60px;
   padding-top: 5px;
 `;
-
-// const PokemonCatalogWrapper = styled.div`
-//   display: flex;
-//   flex-wrap: wrap;
-//   justify-content: space-around;
-//   max-width: 820px;
-//   margin: 20px auto;
-//   padding: 20px;
-//   border-radius: 12px;
-//   background-color: ${additionalAccentColor};
-// `;
-// const PokemonPreview = styled.div`
-//   width: 180px;
-//   text-align: center;
-//   margin: 10px;
-//   border-radius: 12px;
-//   background-color: ${mainAccentColor};
-//   font-size: 14px;
-// `;
-// const PokemonPreviewImage = styled.img`
-//   border: solid ${(props) => props.$borderColor} 5px;
-//   border-radius: 50%;
-//   background-color: ${mainBackgroundColor};
-//   margin: 10px;
-// `;
-// const PokemonPreviewName = styled.div`
-//   color: white;
-//   font-weight: bold;
-// `;
-// const PokemonPreviewTypesWrapper = styled.div`
-//   display: flex;
-//   justify-content: center;
-//   margin: 10px;
-// `;
-// const PokemonPreviewTypes = styled.div`
-//   padding: 8px;
-//   margin: 0 5px 0 5px;
-//   border-radius: 10px;
-//   background-color: ${(props) => props.$backgroundColor};
-//   color: white;
-//
-//   ${(props) =>
-//     (props.$backgroundColor === colors.flying ||
-//       props.$backgroundColor === colors.ice ||
-//       props.$backgroundColor === colors.poison ||
-//       props.$backgroundColor === colors.electric) &&
-//     css`
-//       color: ${mainAccentColor};
-//     `};
-// `;
-// const ShowMoreButton = styled.button``;

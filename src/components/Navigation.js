@@ -25,12 +25,12 @@ function Navigation({ onPageSelect, onSearch }) {
     if (filterValue === "name") {
       onPageSelect("pokedex");
     } else if (filterValue === "type") {
-      onPageSelect("type");
+      onPageSelect("catalog");
     }
 
     if (input !== null) {
-      const pokemon = input.current.value;
-      onSearch(pokemon);
+      const value = input.current.value;
+      onSearch(value);
     }
   }
 

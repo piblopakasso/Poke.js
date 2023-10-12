@@ -9,8 +9,7 @@ import Navigation from "../Navigation";
 
 function App() {
   const [currentView, setCurrentView] = useState("home");
-
-  const [pokemon, setPokemon] = useState(null);
+  const [inputValue, setInputValue] = useState(null);
 
   function switchView(value) {
     setCurrentView(value);
@@ -20,11 +19,11 @@ function App() {
     <>
       <StyledApp>
         <StyledAppHeader>
-          <Navigation onPageSelect={switchView} onSearch={setPokemon} />
+          <Navigation onPageSelect={switchView} onSearch={setInputValue} />
 
           {currentView === "home" && <Home />}
-          {currentView === "pokedex" && <Pokedex pokemon={pokemon} />}
-          {currentView === "catalog" && <Catalog />}
+          {currentView === "pokedex" && <Pokedex pokemonName={inputValue} />}
+          {currentView === "catalog" && <Catalog pokemonType={inputValue} />}
         </StyledAppHeader>
       </StyledApp>
     </>
