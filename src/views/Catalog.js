@@ -100,28 +100,31 @@ function Catalog({ pokemonType }) {
     <>
       {pokemonCatalog.touched && (
         <PokemonCatalogWrapper>
-          {Object.values(pokemonCatalogList).map((content, index) => (
-            <PokemonPreview>
-              <PokemonPreviewImage
-                $borderColor={colors[pokemonCatalog.type]}
-                src={content.image}
-                alt="Pokemon image"
-              />
-              <PokemonPreviewName $textColor={colors[pokemonCatalog.type]}>
-                {capitalizeFirstLetter(content.formName)}
-              </PokemonPreviewName>
-              <PokemonPreviewTypesWrapper>
-                {content.types.map((text, index) => (
-                  <PokemonPreviewTypes
-                    $backgroundColor={colors[text]}
-                    key={index}
-                  >
-                    {capitalizeFirstLetter(text)}
-                  </PokemonPreviewTypes>
-                ))}
-              </PokemonPreviewTypesWrapper>
-            </PokemonPreview>
-          ))}
+          <SortButton>Sort</SortButton>
+          <PokemonCatalog>
+            {Object.values(pokemonCatalogList).map((content, index) => (
+              <PokemonPreview>
+                <PokemonPreviewImage
+                  $borderColor={colors[pokemonCatalog.type]}
+                  src={content.image}
+                  alt="Pokemon image"
+                />
+                <PokemonPreviewName $textColor={colors[pokemonCatalog.type]}>
+                  {capitalizeFirstLetter(content.formName)}
+                </PokemonPreviewName>
+                <PokemonPreviewTypesWrapper>
+                  {content.types.map((text, index) => (
+                    <PokemonPreviewTypes
+                      $backgroundColor={colors[text]}
+                      key={index}
+                    >
+                      {capitalizeFirstLetter(text)}
+                    </PokemonPreviewTypes>
+                  ))}
+                </PokemonPreviewTypesWrapper>
+              </PokemonPreview>
+            ))}
+          </PokemonCatalog>
 
           <ShowMoreButton
             onClick={() =>
@@ -170,14 +173,32 @@ const colors = {
 
 const PokemonCatalogWrapper = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  max-width: 820px;
-  margin: 20px auto;
-  padding: 20px;
-  border-radius: 12px;
-  background-color: ${additionalAccentColor};
+  flex-direction: column;
+  max-width: 1200px;
+  margin: 0 auto;
 `;
+
+const SortButton = styled.button`
+  width: max-content;
+  padding: 5px 5px 5px 7px;
+  margin: 20px 0 10px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: solid gainsboro 1px;
+
+  &:after {
+    content: "\\25BC";
+    color: gray;
+    margin-left: 15px;
+    font-size: 12px;
+  }
+`;
+
+const PokemonCatalog = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`;
+
 const PokemonPreview = styled.div`
   width: 180px;
   text-align: center;
@@ -185,22 +206,34 @@ const PokemonPreview = styled.div`
   border-radius: 12px;
   background-color: ${mainAccentColor};
   font-size: 14px;
+  cursor: pointer;
+  outline: solid ${mainAccentColor} 4px;
+  outline-offset: -4px;
+  transition: 0.1s outline-offset ease-in-out;
+
+  &:hover {
+    outline-offset: -1px;
+  }
 `;
+
 const PokemonPreviewImage = styled.img`
   border: solid ${(props) => props.$borderColor} 5px;
   border-radius: 50%;
   background-color: ${mainBackgroundColor};
-  margin: 10px;
+  margin: 15px;
 `;
+
 const PokemonPreviewName = styled.div`
   color: white;
   font-weight: bold;
 `;
+
 const PokemonPreviewTypesWrapper = styled.div`
   display: flex;
   justify-content: center;
-  margin: 10px;
+  margin: 15px;
 `;
+
 const PokemonPreviewTypes = styled.div`
   padding: 8px;
   margin: 0 5px 0 5px;
@@ -217,4 +250,17 @@ const PokemonPreviewTypes = styled.div`
       color: ${mainAccentColor};
     `};
 `;
-const ShowMoreButton = styled.button``;
+
+const ShowMoreButton = styled.button`
+  width: max-content;
+  font-size: 14px;
+  padding: 10px 13px 10px 13px;
+  margin: 20px auto 40px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: solid gainsboro 1px;
+
+  &:hover {
+    background-color: gainsboro;
+  }
+`;

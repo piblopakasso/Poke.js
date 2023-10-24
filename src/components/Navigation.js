@@ -4,6 +4,7 @@ import styled, { css } from "styled-components";
 function Navigation({ onPageSelect, onSearch }) {
   const input = useRef(null);
 
+  const [selectedPage, setSelectedPage] = useState("Home");
   const [filterOptionsShown, setFilterOptionsShown] = useState(false);
   const [filterValue, setFilterValue] = useState("name");
 
@@ -19,13 +20,20 @@ function Navigation({ onPageSelect, onSearch }) {
     setFilterValue(e.target.value);
   }
 
+  function handleClick(e, pageName) {
+    setSelectedPage(e.target.textContent);
+    onPageSelect(pageName);
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
 
     if (filterValue === "name") {
       onPageSelect("pokedex");
+      setSelectedPage("Pokedex");
     } else if (filterValue === "type") {
       onPageSelect("catalog");
+      setSelectedPage("Catalog");
     }
 
     if (input !== null) {
@@ -40,20 +48,23 @@ function Navigation({ onPageSelect, onSearch }) {
         <HeaderContentWrapper>
           <NavigationWrapper>
             <NavigationPage
+              $selected={selectedPage === "Home"}
               $backgroundColor={"#8fbc8f"}
-              onClick={() => onPageSelect("home")}
+              onClick={(e) => handleClick(e, "home")}
             >
               <span>Home</span>
             </NavigationPage>
             <NavigationPage
+              $selected={selectedPage === "Pokedex"}
               $backgroundColor={"#ff4c4c"}
-              onClick={() => onPageSelect("pokedex")}
+              onClick={(e) => handleClick(e, "pokedex")}
             >
               <span>Pokedex</span>
             </NavigationPage>
             <NavigationPage
+              $selected={selectedPage === "Catalog"}
               $backgroundColor={"#2fadd3"}
-              onClick={() => onPageSelect("catalog")}
+              onClick={(e) => handleClick(e, "catalog")}
             >
               <span>Catalog</span>
             </NavigationPage>
@@ -107,8 +118,12 @@ function Navigation({ onPageSelect, onSearch }) {
 
 export default Navigation;
 
+const mainBackgroundColor = "#F5F5F5";
+const mainAccentColor = "#282c34";
+const additionalAccentColor = "#dcdcdc";
+
 const Header = styled.div`
-  background-color: #282c34;
+  background-color: ${mainAccentColor};
   width: 100%;
   z-index: 101;
 `;
@@ -117,7 +132,7 @@ const HeaderContentWrapper = styled.div`
   width: 600px;
   margin-left: 20px;
   padding: 0 25px 15px 25px;
-  background-color: #282c34;
+  background-color: ${mainAccentColor};
   border-top: none;
   border-bottom-left-radius: 12px;
   border-bottom-right-radius: 12px;
@@ -138,14 +153,25 @@ const NavigationPage = styled.div`
   background-color: ${(props) => props.$backgroundColor};
   border-bottom-left-radius: 12px;
   border-bottom-right-radius: 12px;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.1s linear, outline-offset 0.1s linear,
+    outline-color 0.1s linear;
   cursor: pointer;
   color: white;
   font-weight: bold;
   font-size: 18px;
+  outline: solid ${(props) => props.$backgroundColor} 4px;
+  outline-offset: -4px;
+
+  ${(props) =>
+    props.$selected &&
+    css`
+      outline-offset: -1px;
+      outline-color: ${(props) => props.$backgroundColor};
+    `};
 
   &:hover {
     background-color: #f1c91f;
+    outline-color: #f1c91f;
   }
 `;
 
@@ -155,7 +181,7 @@ const SearchWrapper = styled.div`
   margin-top: 15px;
   padding: 5px 15px 5px 15px;
   border-radius: 12px;
-  background-color: #f5f5f5; //#f5f5f5 //#282c34
+  background-color: ${mainBackgroundColor}; //{mainAccentColor}
 `;
 
 const SearchForm = styled.form``;
@@ -203,7 +229,7 @@ const FilterOptionsWrapper = styled.div`
   margin-right: 10px;
   border: solid gainsboro 1px;
   border-radius: 8px;
-  background-color: #f5f5f5;
+  background-color: ${mainBackgroundColor};
   font-size: 12px;
   z-index: 100;
 
@@ -223,12 +249,12 @@ const InputOption = styled.input`
   appearance: none;
   width: 12px;
   height: 12px;
-  border: 1px solid #282c34;
+  border: 1px solid ${mainAccentColor};
   border-radius: 50%;
   margin-left: 7px;
   transition: 0.2s all linear;
 
   &:checked {
-    border: 6px solid #282c34;
+    border: 7px solid ${mainAccentColor};
   }
 `;

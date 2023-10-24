@@ -35,7 +35,6 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
-    "@reduxjs/toolkit": "^1.9.6",
     "react-redux": "^8.1.2",
     "styled-components": "^6.0.4"
   }
