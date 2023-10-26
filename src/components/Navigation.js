@@ -5,8 +5,24 @@ function Navigation({ onPageSelect, onSearch }) {
   const input = useRef(null);
 
   const [selectedPage, setSelectedPage] = useState("Home");
+
+  const [typeOptionsShown, setTypeOptionsShown] = useState(false);
+  const [typeValue, setTypeValue] = useState("Choose the type");
+
   const [filterOptionsShown, setFilterOptionsShown] = useState(false);
   const [filterValue, setFilterValue] = useState("name");
+
+  function toggleTypeOptions() {
+    if (typeOptionsShown === true) {
+      setTypeOptionsShown(false);
+    } else {
+      setTypeOptionsShown(true);
+    }
+  }
+
+  function chooseType(e) {
+    setTypeValue(e.target.textContent);
+  }
 
   function toggleFilterOptions() {
     if (filterOptionsShown === true) {
@@ -25,20 +41,16 @@ function Navigation({ onPageSelect, onSearch }) {
     onPageSelect(pageName);
   }
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-
-    if (filterValue === "name") {
-      onPageSelect("pokedex");
-      setSelectedPage("Pokedex");
-    } else if (filterValue === "type") {
-      onPageSelect("catalog");
-      setSelectedPage("Catalog");
-    }
-
-    if (input !== null) {
+  async function handleSubmit() {
+    if (filterValue === "name" && input !== null) {
       const value = input.current.value;
       onSearch(value);
+      onPageSelect("pokedex");
+      setSelectedPage("Pokedex");
+    } else if (filterValue === "type" && typeValue !== "Choose the type") {
+      onSearch(typeValue.toLowerCase());
+      onPageSelect("catalog");
+      setSelectedPage("Catalog");
     }
   }
 
@@ -71,18 +83,86 @@ function Navigation({ onPageSelect, onSearch }) {
           </NavigationWrapper>
 
           <SearchWrapper>
-            <SearchForm onSubmit={handleSubmit}>
-              <InputLabel>
-                Find your Pokemon!
-                <SearchInput
-                  ref={input}
-                  type="text"
-                  placeholder="Please enter ID or name"
-                />
-              </InputLabel>
+            <span>Find your Pokemon!</span>
+            {filterValue === "name" ? (
+              <SearchInput
+                ref={input}
+                type="text"
+                placeholder="Please enter ID or name"
+              />
+            ) : (
+              <TypeListWrapper>
+                <TypeListButton onClick={toggleTypeOptions}>
+                  <TypeButtonText
+                    $color={colors[typeValue.toLowerCase()]}
+                    $typeChosen={typeValue !== "Choose the type"}
+                  >
+                    {typeValue}
+                  </TypeButtonText>
+                </TypeListButton>
+                <TypeOptionsWrapper $shown={typeOptionsShown}>
+                  <TypeOption $color={colors.normal} onClick={chooseType}>
+                    Normal
+                  </TypeOption>
+                  <TypeOption $color={colors.fighting} onClick={chooseType}>
+                    Fighting
+                  </TypeOption>
+                  <TypeOption $color={colors.flying} onClick={chooseType}>
+                    Flying
+                  </TypeOption>
+                  <TypeOption $color={colors.poison} onClick={chooseType}>
+                    Poison
+                  </TypeOption>
+                  <TypeOption $color={colors.ground} onClick={chooseType}>
+                    Ground
+                  </TypeOption>
+                  <TypeOption $color={colors.rock} onClick={chooseType}>
+                    Rock
+                  </TypeOption>
+                  <TypeOption $color={colors.bug} onClick={chooseType}>
+                    Bug
+                  </TypeOption>
+                  <TypeOption $color={colors.steel} onClick={chooseType}>
+                    Steel
+                  </TypeOption>
+                  <TypeOption $color={colors.ghost} onClick={chooseType}>
+                    Ghost
+                  </TypeOption>
+                  <TypeOption $color={colors.fire} onClick={chooseType}>
+                    Fire
+                  </TypeOption>
+                  <TypeOption $color={colors.water} onClick={chooseType}>
+                    Water
+                  </TypeOption>
+                  <TypeOption $color={colors.grass} onClick={chooseType}>
+                    Grass
+                  </TypeOption>
+                  <TypeOption $color={colors.electric} onClick={chooseType}>
+                    Electric
+                  </TypeOption>
+                  <TypeOption $color={colors.psychic} onClick={chooseType}>
+                    Psychic
+                  </TypeOption>
+                  <TypeOption $color={colors.ice} onClick={chooseType}>
+                    Ice
+                  </TypeOption>
+                  <TypeOption $color={colors.dragon} onClick={chooseType}>
+                    Dragon
+                  </TypeOption>
+                  <TypeOption $color={colors.dark} onClick={chooseType}>
+                    Dark
+                  </TypeOption>
+                  <TypeOption $color={colors.fairy} onClick={chooseType}>
+                    Fairy
+                  </TypeOption>
+                </TypeOptionsWrapper>
+              </TypeListWrapper>
+            )}
 
-              <SearchButton type="submit">Search</SearchButton>
-            </SearchForm>
+            <SearchButton type="button" onClick={handleSubmit}>
+              Search
+            </SearchButton>
+
             <FilterWrapper>
               <FilterButton onClick={toggleFilterOptions}>Filter</FilterButton>
               <FilterOptionsWrapper $shown={filterOptionsShown}>
@@ -121,6 +201,27 @@ export default Navigation;
 const mainBackgroundColor = "#F5F5F5";
 const mainAccentColor = "#282c34";
 const additionalAccentColor = "#dcdcdc";
+
+const colors = {
+  normal: "#bca38f",
+  fighting: "#fa8072",
+  flying: "#9ee1e0",
+  poison: "#9bc51a",
+  ground: "#b67d37",
+  rock: "#3a3736",
+  bug: "#449d31",
+  steel: "#8d9d9f",
+  ghost: "#896fb4",
+  fire: "#ff4c4c",
+  water: "#2fadd3",
+  grass: "#8fbc8f",
+  electric: "#f1c91f",
+  psychic: "#c553b4",
+  ice: "#cddade",
+  dragon: "#ea7638",
+  dark: "#29314a",
+  fairy: "#e8a8dd",
+};
 
 const Header = styled.div`
   background-color: ${mainAccentColor};
@@ -178,16 +279,12 @@ const NavigationPage = styled.div`
 const SearchWrapper = styled.div`
   display: flex;
   justify-content: center;
+  align-content: center;
+  align-items: center;
   margin-top: 15px;
   padding: 5px 15px 5px 15px;
   border-radius: 12px;
   background-color: ${mainBackgroundColor}; //{mainAccentColor}
-`;
-
-const SearchForm = styled.form``;
-
-const InputLabel = styled.label`
-  display: inline-block;
 `;
 
 const SearchInput = styled.input`
@@ -195,14 +292,18 @@ const SearchInput = styled.input`
   padding: 5px 5px 5px 20px;
   border: solid gainsboro 1px;
   border-radius: 8px;
+  width: 200px;
+  box-sizing: border-box;
+  font-size: 14px;
 `;
 
 const SearchButton = styled.button`
-  margin-right: 10px;
   padding: 5px 7px 5px 7px;
+  margin-right: 10px;
   border-radius: 8px;
   cursor: pointer;
   border: solid gainsboro 1px;
+  font-size: 14px;
 
   &:hover {
     background-color: gainsboro;
@@ -215,6 +316,8 @@ const FilterWrapper = styled.div`
 
 const FilterButton = styled(SearchButton)`
   padding: 5px 5px 5px 7px;
+  margin: 0;
+  font-size: 14px;
 
   &:after {
     content: "\\25BC";
@@ -226,12 +329,13 @@ const FilterButton = styled(SearchButton)`
 
 const FilterOptionsWrapper = styled.div`
   position: absolute;
-  margin-right: 10px;
   border: solid gainsboro 1px;
   border-radius: 8px;
   background-color: ${mainBackgroundColor};
   font-size: 12px;
   z-index: 100;
+  width: 100%;
+  box-sizing: border-box;
 
   ${(props) =>
     !props.$shown &&
@@ -255,6 +359,69 @@ const InputOption = styled.input`
   transition: 0.2s all linear;
 
   &:checked {
-    border: 7px solid ${mainAccentColor};
+    border: 6px solid ${mainAccentColor};
+  }
+`;
+
+const TypeListWrapper = styled(FilterWrapper)`
+  margin: 0 10px 0 10px;
+`;
+
+const TypeListButton = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  padding: 6px 5px 6px 20px;
+  border: solid gainsboro 1px;
+  border-radius: 8px;
+  width: 200px;
+  background-color: white;
+
+  &:after {
+    content: "\\25BC";
+    color: gray;
+    font-size: 12px;
+  }
+`;
+
+const TypeButtonText = styled.span`
+  font-size: 14px;
+  color: gray;
+
+  ${(props) =>
+    props.$typeChosen &&
+    css`
+      color: black;
+
+      &:after {
+        content: "";
+        border-left: solid ${(props) => props.$color} 6px;
+        margin-left: 8px;
+      }
+    `};
+`;
+
+const TypeOptionsWrapper = styled(FilterOptionsWrapper)`
+  padding: 3px 5px 3px 20px;
+
+  ${(props) =>
+    !props.$shown &&
+    css`
+      display: none;
+    `};
+`;
+
+const TypeOption = styled.div`
+  padding: 3px 0 3px 0;
+  font-size: 14px;
+  cursor: pointer;
+
+  &:hover {
+    &:after {
+      content: "";
+      border-left: solid ${(props) => props.$color} 6px;
+      margin-left: 8px;
+    }
   }
 `;

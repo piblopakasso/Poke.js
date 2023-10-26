@@ -562,8 +562,8 @@ const PokemonForm = styled.div`
   &:hover {
     &:after {
       content: "";
-      border-left: solid ${(props) => props.$color} 4px;
-      margin-left: 5px;
+      border-left: solid ${(props) => props.$color} 6px;
+      margin-left: 8px;
     }
   }
 `;
