@@ -1,43 +1,56 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import styled, { css } from "styled-components";
+
+import useClickOutside from "../hooks/useClickOutside";
 
 function Navigation({ onPageSelect, onSearch }) {
   const [inputValue, setInputValue] = useState("");
 
   const [selectedPage, setSelectedPage] = useState("Home");
 
-  const [typeOptionsShown, setTypeOptionsShown] = useState(false);
-  const [typeValue, setTypeValue] = useState("Choose a type");
+  const [pokemonTypeOption, setPokemonTypeOption] = useState("Choose a type");
+  const [pokemonTypeOptionsShown, setPokemonTypeOptionsShown] = useState(false);
 
-  const [filterOptionsShown, setFilterOptionsShown] = useState(false);
-  const [filterValue, setFilterValue] = useState("Name");
+  const [searchOption, setSearchOption] = useState("Name");
+  const [searchOptionsShown, setSearchOptionsShown] = useState(false);
+
+  const pokemonTypeSelect = useRef(null);
+  const searchOptionSelect = useRef(null);
 
   function handleInputChange(e) {
     setInputValue(e.target.value);
   }
 
-  function toggleTypeOptions() {
-    if (typeOptionsShown === true) {
-      setTypeOptionsShown(false);
+  function togglePokemonTypeSelect() {
+    if (pokemonTypeOptionsShown) {
+      setPokemonTypeOptionsShown(false);
     } else {
-      setTypeOptionsShown(true);
+      setPokemonTypeOptionsShown(true);
     }
   }
 
-  function chooseType(e) {
-    setTypeValue(e.target.textContent);
+  function hidePokemonTypeSelect() {
+    setPokemonTypeOptionsShown(false);
   }
 
-  function toggleFilterOptions() {
-    if (filterOptionsShown === true) {
-      setFilterOptionsShown(false);
+  function choosePokemonType(e) {
+    setPokemonTypeOption(e.target.textContent);
+  }
+
+  function toggleSearchOptionSelect() {
+    if (searchOptionsShown) {
+      setSearchOptionsShown(false);
     } else {
-      setFilterOptionsShown(true);
+      setSearchOptionsShown(true);
     }
   }
 
-  function chooseFilter(e) {
-    setFilterValue(e.target.textContent);
+  function hideSearchOptionSelect() {
+    setSearchOptionsShown(false);
+  }
+
+  function chooseSearchOption(e) {
+    setSearchOption(e.target.textContent);
   }
 
   function handlePageSwitch(e, pageName) {
@@ -46,16 +59,22 @@ function Navigation({ onPageSelect, onSearch }) {
   }
 
   function handleSubmit() {
-    if (filterValue === "Name" && inputValue !== "") {
+    if (searchOption === "Name" && inputValue !== "") {
       onSearch(inputValue);
       onPageSelect("pokedex");
       setSelectedPage("Pokedex");
-    } else if (filterValue === "Type" && typeValue !== "Choose a type") {
-      onSearch(typeValue.toLowerCase());
+    } else if (
+      searchOption === "Type" &&
+      pokemonTypeOption !== "Choose a type"
+    ) {
+      onSearch(pokemonTypeOption.toLowerCase());
       onPageSelect("catalog");
       setSelectedPage("Catalog");
     }
   }
+
+  useClickOutside(pokemonTypeSelect, hidePokemonTypeSelect);
+  useClickOutside(searchOptionSelect, hideSearchOptionSelect);
 
   return (
     <>
@@ -87,7 +106,7 @@ function Navigation({ onPageSelect, onSearch }) {
 
           <SearchWrapper>
             <span>Find your Pokemon!</span>
-            {filterValue === "Name" ? (
+            {searchOption === "Name" ? (
               <SearchInput
                 value={inputValue}
                 type="text"
@@ -95,69 +114,117 @@ function Navigation({ onPageSelect, onSearch }) {
                 onChange={handleInputChange}
               />
             ) : (
-              <TypeListWrapper>
-                <TypeListButton onClick={toggleTypeOptions}>
+              <TypeListWrapper ref={pokemonTypeSelect}>
+                <TypeListButton onClick={togglePokemonTypeSelect}>
                   <TypeButtonText
-                    $color={colors[typeValue.toLowerCase()]}
-                    $typeChosen={typeValue !== "Choose a type"}
+                    $color={colors[pokemonTypeOption.toLowerCase()]}
+                    $typeChosen={pokemonTypeOption !== "Choose a type"}
                   >
-                    {typeValue}
+                    {pokemonTypeOption}
                   </TypeButtonText>
                 </TypeListButton>
-                {typeOptionsShown && (
+                {pokemonTypeOptionsShown && (
                   <TypeOptionsWrapper>
-                    <TypeOption $color={colors.normal} onClick={chooseType}>
+                    <TypeOption
+                      $color={colors.normal}
+                      onClick={choosePokemonType}
+                    >
                       Normal
                     </TypeOption>
-                    <TypeOption $color={colors.fighting} onClick={chooseType}>
+                    <TypeOption
+                      $color={colors.fighting}
+                      onClick={choosePokemonType}
+                    >
                       Fighting
                     </TypeOption>
-                    <TypeOption $color={colors.flying} onClick={chooseType}>
+                    <TypeOption
+                      $color={colors.flying}
+                      onClick={choosePokemonType}
+                    >
                       Flying
                     </TypeOption>
-                    <TypeOption $color={colors.poison} onClick={chooseType}>
+                    <TypeOption
+                      $color={colors.poison}
+                      onClick={choosePokemonType}
+                    >
                       Poison
                     </TypeOption>
-                    <TypeOption $color={colors.ground} onClick={chooseType}>
+                    <TypeOption
+                      $color={colors.ground}
+                      onClick={choosePokemonType}
+                    >
                       Ground
                     </TypeOption>
-                    <TypeOption $color={colors.rock} onClick={chooseType}>
+                    <TypeOption
+                      $color={colors.rock}
+                      onClick={choosePokemonType}
+                    >
                       Rock
                     </TypeOption>
-                    <TypeOption $color={colors.bug} onClick={chooseType}>
+                    <TypeOption $color={colors.bug} onClick={choosePokemonType}>
                       Bug
                     </TypeOption>
-                    <TypeOption $color={colors.steel} onClick={chooseType}>
+                    <TypeOption
+                      $color={colors.steel}
+                      onClick={choosePokemonType}
+                    >
                       Steel
                     </TypeOption>
-                    <TypeOption $color={colors.ghost} onClick={chooseType}>
+                    <TypeOption
+                      $color={colors.ghost}
+                      onClick={choosePokemonType}
+                    >
                       Ghost
                     </TypeOption>
-                    <TypeOption $color={colors.fire} onClick={chooseType}>
+                    <TypeOption
+                      $color={colors.fire}
+                      onClick={choosePokemonType}
+                    >
                       Fire
                     </TypeOption>
-                    <TypeOption $color={colors.water} onClick={chooseType}>
+                    <TypeOption
+                      $color={colors.water}
+                      onClick={choosePokemonType}
+                    >
                       Water
                     </TypeOption>
-                    <TypeOption $color={colors.grass} onClick={chooseType}>
+                    <TypeOption
+                      $color={colors.grass}
+                      onClick={choosePokemonType}
+                    >
                       Grass
                     </TypeOption>
-                    <TypeOption $color={colors.electric} onClick={chooseType}>
+                    <TypeOption
+                      $color={colors.electric}
+                      onClick={choosePokemonType}
+                    >
                       Electric
                     </TypeOption>
-                    <TypeOption $color={colors.psychic} onClick={chooseType}>
+                    <TypeOption
+                      $color={colors.psychic}
+                      onClick={choosePokemonType}
+                    >
                       Psychic
                     </TypeOption>
-                    <TypeOption $color={colors.ice} onClick={chooseType}>
+                    <TypeOption $color={colors.ice} onClick={choosePokemonType}>
                       Ice
                     </TypeOption>
-                    <TypeOption $color={colors.dragon} onClick={chooseType}>
+                    <TypeOption
+                      $color={colors.dragon}
+                      onClick={choosePokemonType}
+                    >
                       Dragon
                     </TypeOption>
-                    <TypeOption $color={colors.dark} onClick={chooseType}>
+                    <TypeOption
+                      $color={colors.dark}
+                      onClick={choosePokemonType}
+                    >
                       Dark
                     </TypeOption>
-                    <TypeOption $color={colors.fairy} onClick={chooseType}>
+                    <TypeOption
+                      $color={colors.fairy}
+                      onClick={choosePokemonType}
+                    >
                       Fairy
                     </TypeOption>
                   </TypeOptionsWrapper>
@@ -169,17 +236,17 @@ function Navigation({ onPageSelect, onSearch }) {
               Search
             </SearchButton>
 
-            <FilterWrapper>
-              <FilterButton onClick={toggleFilterOptions}>
-                {filterValue}
-              </FilterButton>
-              {filterOptionsShown && (
-                <FilterOptionsWrapper>
-                  <FilterOption onClick={chooseFilter}>Name</FilterOption>
-                  <FilterOption onClick={chooseFilter}>Type</FilterOption>
-                </FilterOptionsWrapper>
+            <SearchOptionWrapper ref={searchOptionSelect}>
+              <SearchOptionButton onClick={toggleSearchOptionSelect}>
+                {searchOption}
+              </SearchOptionButton>
+              {searchOptionsShown && (
+                <SearchOptionListWrapper>
+                  <SearchOption onClick={chooseSearchOption}>Name</SearchOption>
+                  <SearchOption onClick={chooseSearchOption}>Type</SearchOption>
+                </SearchOptionListWrapper>
               )}
-            </FilterWrapper>
+            </SearchOptionWrapper>
           </SearchWrapper>
         </HeaderContentWrapper>
       </Header>
@@ -301,11 +368,11 @@ const SearchButton = styled.button`
   }
 `;
 
-const FilterWrapper = styled.div`
+const SearchOptionWrapper = styled.div`
   position: relative;
 `;
 
-const FilterButton = styled(SearchButton)`
+const SearchOptionButton = styled(SearchButton)`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -322,7 +389,7 @@ const FilterButton = styled(SearchButton)`
   }
 `;
 
-const FilterOptionsWrapper = styled.div`
+const SearchOptionListWrapper = styled.div`
   position: absolute;
   padding: 3px 10px 3px 10px;
   border: solid gainsboro 1px;
@@ -334,7 +401,7 @@ const FilterOptionsWrapper = styled.div`
   box-sizing: border-box;
 `;
 
-const FilterOption = styled.div`
+const SearchOption = styled.div`
   padding: 3px 0 3px 0;
   font-size: 14px;
   cursor: pointer;
@@ -348,7 +415,7 @@ const FilterOption = styled.div`
   }
 `;
 
-const TypeListWrapper = styled(FilterWrapper)`
+const TypeListWrapper = styled(SearchOptionWrapper)`
   margin: 0 10px 0 10px;
 `;
 
@@ -387,7 +454,7 @@ const TypeButtonText = styled.span`
     `};
 `;
 
-const TypeOptionsWrapper = styled(FilterOptionsWrapper)`
+const TypeOptionsWrapper = styled(SearchOptionListWrapper)`
   padding: 3px 10px 3px 20px;
 `;
 
