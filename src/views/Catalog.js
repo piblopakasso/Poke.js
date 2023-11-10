@@ -23,6 +23,16 @@ function getFormattedName(name) {
   return name.toUpperCase();
 }
 
+function getFormattedId(id) {
+  if (id.length > 4) {
+    return `#${id}`;
+  } else {
+    const str = `#000${id}`;
+
+    return str.slice(-4);
+  }
+}
+
 function Catalog({ pokemonType }) {
   const [pokemonCatalog, setPokemonCatalog] = useState({
     touched: false,
@@ -68,6 +78,7 @@ function Catalog({ pokemonType }) {
       [pokemonName]: {
         formName: getFormattedName(previewData.name),
         specieName: getFormattedName(previewData.species.name),
+        formId: getFormattedId(previewData.id.toString()),
         image: previewData.sprites["front_default"],
         types: getObjectValue(previewData.types, "type", "name"),
       },
@@ -103,12 +114,17 @@ function Catalog({ pokemonType }) {
           <SortButton>Sort</SortButton>
           <PokemonCatalog>
             {Object.values(pokemonCatalogList).map((content, index) => (
-              <PokemonPreview>
-                <PokemonPreviewImage
+              <PokemonPreview key={index}>
+                <PokemonPreviewImageWrapper
                   $borderColor={colors[pokemonCatalog.type]}
-                  src={content.image}
-                  alt="Pokemon image"
-                />
+                >
+                  <PokemonPreviewImage
+                    src={content.image}
+                    alt="Pokemon Image"
+                  />
+                </PokemonPreviewImageWrapper>
+
+                <PokemonPreviewID>#{content.formId}</PokemonPreviewID>
                 <PokemonPreviewName $textColor={colors[pokemonCatalog.type]}>
                   {capitalizeFirstLetter(content.formName)}
                 </PokemonPreviewName>
@@ -216,22 +232,37 @@ const PokemonPreview = styled.div`
   }
 `;
 
-const PokemonPreviewImage = styled.img`
+const PokemonPreviewImageWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border: solid ${(props) => props.$borderColor} 5px;
   border-radius: 50%;
   background-color: ${mainBackgroundColor};
-  margin: 15px;
+  width: 100px;
+  height: 100px;
+  margin: 15px auto 10px;
+`;
+
+const PokemonPreviewImage = styled.img`
+  border-radius: 50%;
+`;
+
+const PokemonPreviewID = styled.div`
+  color: white;
+  font-weight: bold;
 `;
 
 const PokemonPreviewName = styled.div`
   color: white;
   font-weight: bold;
+  margin: 5px 10px 0 10px;
 `;
 
 const PokemonPreviewTypesWrapper = styled.div`
   display: flex;
   justify-content: center;
-  margin: 15px;
+  margin: 10px 15px 15px 15px;
 `;
 
 const PokemonPreviewTypes = styled.div`
