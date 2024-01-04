@@ -1,32 +1,42 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
 import Home from "../../views/Home";
 import Pokedex from "../../views/Pokedex";
 import Catalog from "../../views/Catalog";
-
 import Navigation from "../Navigation";
+
+const queryClient = new QueryClient();
 
 function App() {
   const [currentView, setCurrentView] = useState("home");
   const [inputValue, setInputValue] = useState(null);
+  const [initialForm, setInitialForm] = useState("blastoise-mega"); //thing to think
 
   function switchView(value) {
     setCurrentView(value);
   }
 
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
       <StyledApp>
         <StyledAppHeader>
           <Navigation onPageSelect={switchView} onSearch={setInputValue} />
-
           {currentView === "home" && <Home />}
-          {currentView === "pokedex" && <Pokedex pokemonName={inputValue} />}
+          {currentView === "pokedex" && (
+            <Pokedex
+              pokemonName={inputValue}
+              setPokemonName={setInputValue}
+              pokemonForm={initialForm}
+              setPokemonForm={setInitialForm}
+            />
+          )}
           {currentView === "catalog" && <Catalog pokemonType={inputValue} />}
         </StyledAppHeader>
       </StyledApp>
-    </>
+    </QueryClientProvider>
   );
 }
 

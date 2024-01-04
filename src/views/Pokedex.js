@@ -1,65 +1,94 @@
 import React, { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+
+import { getPokemonSpecie, getPokemonForms } from "../fetchFunctions";
+import {
+  formatId,
+  formatName,
+  findObjectValue,
+  removeDuplicate,
+  capitalizeFirstLetter,
+} from "../utilityFunctions";
+import PokemonAbility from "../components/PokemonAbility";
+import IsLoading from "../components/IsLoading";
 import styled, { css, keyframes } from "styled-components";
 
-function getObjectValue(object, value, key) {
-  let arr = [];
-
-  for (const item of Object.values(object)) {
-    if (key === undefined) {
-      arr.push(item[value]);
-    } else {
-      arr.push(item[value][key]);
-    }
-  }
-
-  return arr;
-}
-
-function capitalizeFirstLetter(text) {
-  return text.charAt(0).toUpperCase() + text.slice(1);
-}
-
-function getFormattedId(id) {
-  const str = `#000${id}`;
-
-  return str.slice(-4);
-}
-
-function getFormattedName(name) {
-  return name.toUpperCase();
-}
-
-function removeDuplicate(arr) {
-  const set = new Set(arr);
-  return Array.from(set);
-}
-
-function Pokedex({ pokemonName }) {
-  const [pokemonInfo, setPokemonInfo] = useState({
-    touched: false,
-  });
-
-  const [formOptionsShown, setFormOptionsShown] = useState(false);
-
+export default function Pokedex({
+  pokemonName,
+  setPokemonName,
+  pokemonForm,
+  setPokemonForm,
+}) {
+  const [selectedForm, setSelectedForm] = useState(pokemonForm);
+  const [formsListShown, setFormsListShown] = useState(false);
   const [abilityDescription, setAbilityDescription] = useState({
     shown: false,
     text: null,
   });
 
-  useEffect(() => {
-    createPokedexCard(pokemonName);
-  }, [pokemonName]);
+  const {
+    data: pokemonData,
+    isSuccess,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryFn: async function createPokedexCard() {
+      const specie = await getPokemonSpecie(pokemonName);
+      const forms = await getPokemonFormsData(specie.varieties);
 
-  async function getPokemonSpecie(value) {
-    const response = await fetch(
-      `https://pokeapi.co/api/v2/pokemon-species/${value}`
-    );
-    return await response.json();
+      return {
+        id: formatId(specie.id),
+        name: formatName(specie.name),
+        description: findPokemonDescription(specie),
+        defaultForm: specie.varieties[0].pokemon.name,
+        forms: forms,
+      };
+    },
+    queryKey: ["pokemonData", { pokemonName }],
+  });
+
+  useEffect(() => {
+    if (pokemonData && isSuccess) {
+      setInitialForm(pokemonData);
+      resetModals();
+    }
+  }, [pokemonData, isSuccess]);
+
+  function setInitialForm(data) {
+    if (pokemonForm === "default") {
+      setSelectedForm(data.defaultForm);
+    }
   }
 
-  async function getPokemonStats(value) {
-    const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${value}`);
-    return await response.json();
+  function resetModals() {
+    setFormsListShown(false);
+    setAbilityDescription((prevState) => ({
+      ...prevState,
+      shown: false,
+      text: null,
+    }));
+  }
+
+  async function getPokemonFormsData(varieties) {
+    let forms = {};
+
+    for (let item of varieties) {
+      const form = await getPokemonForms(item.pokemon.name);
+
+      forms[form.name] = {
+        imageFront: form.sprites["front_default"],
+        imageBack: form.sprites["back_default"],
+        types: findObjectValue(form.types, "type", "name"),
+        height: form.height,
+        weight: form.weight,
+        abilities: removeDuplicate(
+          findObjectValue(form.abilities, "ability", "name")
+        ),
+        stats: findObjectValue(form.stats, "base_stat"),
+      };
+    }
+
+    return forms;
   }
 
   function findPokemonDescription(object) {
@@ -67,76 +96,33 @@ function Pokedex({ pokemonName }) {
     for (let key of object.flavor_text_entries) {
       if (key.language.name === "en") {
         description = key.flavor_text;
-        //break; without break it will get the last (newest) english descriptions
+        //break; without break it will get the last (newest) english description
       }
     }
 
     return description;
   }
 
-  async function createPokedexCard(pokemon) {
-    if (pokemon != null) {
-      const specie = await getPokemonSpecie(pokemon);
-      const stats = await getPokemonStats(specie.varieties[0].pokemon.name);
-
-      setPokemonInfo((prevState) => ({
-        ...prevState,
-        touched: true,
-        id: getFormattedId(specie.id),
-        name: getFormattedName(specie.name),
-        forms: getObjectValue(specie.varieties, "pokemon", "name"),
-        selectedForm: specie.varieties[0].pokemon.name,
-        description: findPokemonDescription(specie),
-        imageFront: stats.sprites["front_default"],
-        imageBack: stats.sprites["back_default"],
-        types: getObjectValue(stats.types, "type", "name"),
-        height: stats.height,
-        weight: stats.weight,
-        abilities: removeDuplicate(
-          getObjectValue(stats.abilities, "ability", "name")
-        ),
-        stats: getObjectValue(stats.stats, "base_stat"),
-      }));
-
-      setFormOptionsShown(false);
-      setAbilityDescription((prevState) => ({
-        ...prevState,
-        shown: false,
-        text: null,
-      }));
-    }
-  }
-
   function flipImage(e) {
-    if (pokemonInfo.imageBack === null) {
-      e.target.src = pokemonInfo.imageFront;
-    } else if (e.target.src === pokemonInfo.imageFront) {
-      e.target.src = pokemonInfo.imageBack;
+    if (pokemonData.imageBack === null) {
+      e.target.src = pokemonData.imageFront;
+    } else if (e.target.src === pokemonData.imageFront) {
+      e.target.src = pokemonData.imageBack;
     } else {
-      e.target.src = pokemonInfo.imageFront;
+      e.target.src = pokemonData.imageFront;
     }
   }
 
-  async function getAbilityInformation(text) {
-    const response = await fetch(`https://pokeapi.co/api/v2/ability/${text}`);
-    const info = await response.json();
-    let abilityInfo = {
-      name: null,
-      description: "The ability investigation is still in progress.",
-    };
+  function changePokemonForm(e) {
+    setSelectedForm(e.target.textContent.toLowerCase());
+  }
 
-    for (let key of info.effect_entries) {
-      if (key.language.name === "en") {
-        abilityInfo = {
-          name: capitalizeFirstLetter(info.name),
-          description: key.effect,
-        };
-
-        break;
-      }
+  function togglePokemonForms() {
+    if (formsListShown === true) {
+      setFormsListShown(false);
+    } else {
+      setFormsListShown(true);
     }
-
-    return abilityInfo;
   }
 
   function hideAbilityDescription() {
@@ -144,226 +130,186 @@ function Pokedex({ pokemonName }) {
       ...prevState,
       shown: false,
       name: null,
-      text: null,
     }));
   }
 
-  async function toggleAbilityDescription(e, text) {
-    const abilityInfo = await getAbilityInformation(text);
-
+  function showAbilityDescription(e) {
     setAbilityDescription((prevState) => ({
       ...prevState,
       shown: true,
-      name: abilityInfo.name,
-      text: abilityInfo.description,
+      name: e.target.textContent.toLowerCase(),
     }));
-  }
-
-  async function changePokemonForm(e) {
-    const pokemonStats = await getPokemonStats(
-      e.target.textContent.toLowerCase()
-    );
-
-    setPokemonInfo((prevState) => ({
-      ...prevState,
-      selectedForm: e.target.textContent,
-      imageFront: pokemonStats.sprites["front_default"],
-      imageBack: pokemonStats.sprites["back_default"],
-      types: getObjectValue(pokemonStats.types, "type", "name"),
-      height: pokemonStats.height,
-      weight: pokemonStats.weight,
-      abilities: removeDuplicate(
-        getObjectValue(pokemonStats.abilities, "ability", "name")
-      ),
-      stats: getObjectValue(pokemonStats.stats, "base_stat"),
-    }));
-  }
-
-  function togglePokemonForms() {
-    if (formOptionsShown === true) {
-      setFormOptionsShown(false);
-    } else {
-      setFormOptionsShown(true);
-    }
   }
 
   function previousPokemon(id) {
     let number = parseInt(id);
+    setPokemonForm("default");
 
     if (number === 1) {
-      createPokedexCard("1010");
+      setPokemonName(1010);
     } else {
-      createPokedexCard(number - 1);
+      setPokemonName(number - 1);
     }
   }
 
   function nextPokemon(id) {
     let number = parseInt(id);
+    setPokemonForm("default");
 
     if (number === 1010) {
-      createPokedexCard("1");
+      setPokemonName(1);
     } else {
-      createPokedexCard(number + 1);
+      setPokemonName(number + 1);
     }
   }
 
+  if (isLoading) {
+    return <IsLoading />;
+  }
+
+  if (isError) {
+    return <div>Error</div>;
+  }
+
   return (
-    <>
-      {pokemonInfo.touched && (
-        <div className="card">
-          <IdWrapper $backgroundColor={colors[pokemonInfo.types[0]]}>
-            <PokemonId>#{pokemonInfo.id}</PokemonId>
+    pokemonData && (
+      <>
+        <IdWrapper
+          $backgroundColor={colors[pokemonData.forms[selectedForm]?.types[0]]}
+        >
+          <PokemonId>#{pokemonData.id}</PokemonId>
 
-            <LeftArrowWrapper onClick={() => previousPokemon(pokemonInfo.id)}>
-              <LeftArrow>&lt;..</LeftArrow>
-            </LeftArrowWrapper>
-            <RightArrowWrapper onClick={() => nextPokemon(pokemonInfo.id)}>
-              <RightArrow>..&gt;</RightArrow>
-            </RightArrowWrapper>
-          </IdWrapper>
+          <LeftArrowWrapper onClick={() => previousPokemon(pokemonData.id)}>
+            <LeftArrow>&lt;..</LeftArrow>
+          </LeftArrowWrapper>
+          <RightArrowWrapper onClick={() => nextPokemon(pokemonData.id)}>
+            <RightArrow>..&gt;</RightArrow>
+          </RightArrowWrapper>
+        </IdWrapper>
 
-          <PokemonInfo>
-            <ImageWrapper>
-              <PokemonImage
-                src={pokemonInfo.imageFront}
-                alt="Pokemon image"
-                onClick={flipImage}
+        <PokemonInfo>
+          <ImageWrapper>
+            <PokemonImage
+              src={pokemonData.forms[selectedForm]?.imageFront}
+              alt="Pokemon image"
+              onClick={flipImage}
+            />
+          </ImageWrapper>
+
+          <PokemonName>{pokemonData.name}</PokemonName>
+
+          {Object.keys(pokemonData.forms).length > 1 && (
+            <PokemonFormsWrapper>
+              <SelectedPokemonForm onClick={togglePokemonForms}>
+                {capitalizeFirstLetter(selectedForm)}
+              </SelectedPokemonForm>
+              <PokemonFormsList $shown={formsListShown}>
+                {Object.keys(pokemonData.forms).map((text, index) => (
+                  <PokemonForm
+                    key={index}
+                    onClick={changePokemonForm}
+                    $color={colors[pokemonData.forms[selectedForm]?.types[0]]}
+                  >
+                    {capitalizeFirstLetter(text)}
+                  </PokemonForm>
+                ))}
+              </PokemonFormsList>
+            </PokemonFormsWrapper>
+          )}
+
+          <GeneralInfo
+            $backgroundColor={colors[pokemonData.forms[selectedForm]?.types[0]]}
+          >
+            <DescriptionWrapper>
+              Description
+              <PokemonDescription
+                $backgroundColor={
+                  colors[pokemonData.forms[selectedForm]?.types[0]]
+                }
+              >
+                {pokemonData.description}
+              </PokemonDescription>
+            </DescriptionWrapper>
+
+            <HeightWrapper>
+              Height
+              <PokemonHeight
+                $backgroundColor={
+                  colors[pokemonData.forms[selectedForm]?.types[0]]
+                }
+              >
+                {pokemonData.forms[selectedForm]?.height / 10} m
+              </PokemonHeight>
+            </HeightWrapper>
+
+            <WeightWrapper>
+              Weight
+              <PokemonWeight
+                $backgroundColor={
+                  colors[pokemonData.forms[selectedForm]?.types[0]]
+                }
+              >
+                {pokemonData.forms[selectedForm]?.weight / 10} kg
+              </PokemonWeight>
+            </WeightWrapper>
+          </GeneralInfo>
+
+          <TypesWrapper className="types_wrapper">
+            <h4>Types</h4>
+            {pokemonData.forms[selectedForm]?.types.map((text, index) => (
+              <PokemonTypes $backgroundColor={colors[text]} key={index}>
+                {capitalizeFirstLetter(text)}
+              </PokemonTypes>
+            ))}
+          </TypesWrapper>
+
+          <AbilitiesWrapper className="abilities_wrapper">
+            <h4>Abilities</h4>
+            {pokemonData.forms[selectedForm]?.abilities.map((text, index) => (
+              <PokemonAbilities
+                $touched={abilityDescription.shown}
+                key={index}
+                onClick={(e) => showAbilityDescription(e)}
+              >
+                {capitalizeFirstLetter(text)}
+              </PokemonAbilities>
+            ))}
+            {abilityDescription.shown && (
+              <PokemonAbility
+                abilityName={abilityDescription.name}
+                hideDescription={hideAbilityDescription}
               />
-            </ImageWrapper>
-
-            <PokemonName>{pokemonInfo.name}</PokemonName>
-
-            {pokemonInfo.forms.length > 1 && (
-              <PokemonFormsWrapper>
-                <SelectedPokemonForm onClick={togglePokemonForms}>
-                  {capitalizeFirstLetter(pokemonInfo.selectedForm)}
-                </SelectedPokemonForm>
-                <PokemonFormsList $shown={formOptionsShown}>
-                  {pokemonInfo.forms.map((text, index) => (
-                    <PokemonForm
-                      key={index}
-                      onClick={changePokemonForm}
-                      $color={colors[pokemonInfo.types[0]]}
-                    >
-                      {capitalizeFirstLetter(text)}
-                    </PokemonForm>
-                  ))}
-                </PokemonFormsList>
-              </PokemonFormsWrapper>
             )}
+          </AbilitiesWrapper>
 
-            <GeneralInfo $backgroundColor={colors[pokemonInfo.types[0]]}>
-              <DescriptionWrapper>
-                Description
-                <PokemonDescription
-                  $backgroundColor={colors[pokemonInfo.types[0]]}
-                >
-                  {pokemonInfo.description}
-                </PokemonDescription>
-              </DescriptionWrapper>
-
-              <HeightWrapper>
-                Height
-                <PokemonHeight $backgroundColor={colors[pokemonInfo.types[0]]}>
-                  {pokemonInfo.height / 10} m
-                </PokemonHeight>
-              </HeightWrapper>
-
-              <WeightWrapper>
-                Weight
-                <PokemonWeight $backgroundColor={colors[pokemonInfo.types[0]]}>
-                  {pokemonInfo.weight / 10} kg
-                </PokemonWeight>
-              </WeightWrapper>
-            </GeneralInfo>
-
-            <TypesWrapper className="types_wrapper">
-              <h4>Types</h4>
-              {pokemonInfo.types.map((text, index) => (
-                <PokemonTypes $backgroundColor={colors[text]} key={index}>
-                  {capitalizeFirstLetter(text)}
-                </PokemonTypes>
+          <StatsWrapper>
+            Stats
+            <StatColumnsWrapper>
+              {pokemonData.forms[selectedForm]?.stats.map((item, index) => (
+                <StatColumnWrapper key={index}>
+                  <StatColumn
+                    $backgroundColor={
+                      colors[pokemonData.forms[selectedForm]?.types[0]]
+                    }
+                    $height={`${item / 2.5}%`}
+                  />
+                </StatColumnWrapper>
               ))}
-            </TypesWrapper>
-
-            <AbilitiesWrapper className="abilities_wrapper">
-              <h4>Abilities</h4>
-              {pokemonInfo.abilities.map((text, index) => (
-                <PokemonAbilities
-                  $touched={abilityDescription.shown}
-                  key={index}
-                  onClick={(e) => toggleAbilityDescription(e, text)}
-                >
-                  {capitalizeFirstLetter(text)}
-                </PokemonAbilities>
-              ))}
-              {abilityDescription.shown && (
-                <AbilityDescriptionWrapper onClick={hideAbilityDescription}>
-                  <AbilityName>{abilityDescription.name}</AbilityName>
-                  <AbilityDescription>
-                    {abilityDescription.text}
-                  </AbilityDescription>
-                </AbilityDescriptionWrapper>
-              )}
-            </AbilitiesWrapper>
-
-            <StatsWrapper>
-              Stats
-              <StatColumnsWrapper>
-                <StatColumnWrapper>
-                  <StatColumn
-                    $backgroundColor={colors[pokemonInfo.types[0]]}
-                    $height={`${pokemonInfo.stats[0] / 2.5}%`}
-                  />
-                </StatColumnWrapper>
-                <StatColumnWrapper>
-                  <StatColumn
-                    $backgroundColor={colors[pokemonInfo.types[0]]}
-                    $height={`${pokemonInfo.stats[1] / 2.5}%`}
-                  />
-                </StatColumnWrapper>
-                <StatColumnWrapper>
-                  <StatColumn
-                    $backgroundColor={colors[pokemonInfo.types[0]]}
-                    $height={`${pokemonInfo.stats[2] / 2.5}%`}
-                  />
-                </StatColumnWrapper>
-                <StatColumnWrapper>
-                  <StatColumn
-                    $backgroundColor={colors[pokemonInfo.types[0]]}
-                    $height={`${pokemonInfo.stats[3] / 2.5}%`}
-                  />
-                </StatColumnWrapper>
-                <StatColumnWrapper>
-                  <StatColumn
-                    $backgroundColor={colors[pokemonInfo.types[0]]}
-                    $height={`${pokemonInfo.stats[4] / 2.5}%`}
-                  />
-                </StatColumnWrapper>
-                <StatColumnWrapper>
-                  <StatColumn
-                    $backgroundColor={colors[pokemonInfo.types[0]]}
-                    $height={`${pokemonInfo.stats[5] / 2.5}%`}
-                  />
-                </StatColumnWrapper>
-              </StatColumnsWrapper>
-              <StatsNameWrapper>
-                <StatName>HP</StatName>
-                <StatName>Attack</StatName>
-                <StatName>Defense</StatName>
-                <StatName>Special Attack</StatName>
-                <StatName>Special Defense</StatName>
-                <StatName>Speed</StatName>
-              </StatsNameWrapper>
-            </StatsWrapper>
-          </PokemonInfo>
-        </div>
-      )}
-    </>
+            </StatColumnsWrapper>
+            <StatsNameWrapper>
+              <StatName>HP</StatName>
+              <StatName>Attack</StatName>
+              <StatName>Defense</StatName>
+              <StatName>Special Attack</StatName>
+              <StatName>Special Defense</StatName>
+              <StatName>Speed</StatName>
+            </StatsNameWrapper>
+          </StatsWrapper>
+        </PokemonInfo>
+      </>
+    )
   );
 }
-
-export default Pokedex;
 
 const mainBackgroundColor = "#F5F5F5";
 const mainAccentColor = "#282c34";
@@ -392,12 +338,6 @@ const colors = {
   unknown: "#17ccad",
 };
 
-const IdWrapperAppear = keyframes`
-  from {
-    height: 0;
-  }
-`;
-
 const IdWrapper = styled.div`
   position: relative;
   width: 100%;
@@ -408,20 +348,12 @@ const IdWrapper = styled.div`
   color: white;
   background-color: ${(props) => props.$backgroundColor};
   border-bottom: solid ${mainAccentColor} 10px;
-  animation: 1s ease ${IdWrapperAppear};
-`;
-
-const PokemonIdAppear = keyframes`
-  to {
-    opacity: 0.33;
-  }
 `;
 
 const PokemonId = styled.div`
   font-size: 160px;
   color: ${mainBackgroundColor};
-  opacity: 0;
-  animation: 0.5s ease 1s forwards ${PokemonIdAppear};
+  opacity: 0.33;
 `;
 
 const LeftArrowWrapper = styled.div`
@@ -490,17 +422,9 @@ const ImageWrapper = styled.div`
   background-color: ${mainBackgroundColor};
 `;
 
-const ImageAppear = keyframes`
-  to {
-    opacity: 1;
-  }
-`;
-
 const PokemonImage = styled.img`
   width: 100px;
   height: 100px;
-  opacity: 0;
-  animation: 0.5s ease-out 0.5s forwards ${ImageAppear};
 `;
 
 const PokemonInfo = styled.div`
@@ -668,34 +592,6 @@ const PokemonAbilities = styled.div`
     css`
       display: none;
     `};
-`;
-
-const abilityDescriptionAppear = keyframes`
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-`;
-
-const AbilityDescriptionWrapper = styled.div`
-  margin-top: 10px;
-  padding: 10px;
-  border-radius: 12px;
-  color: white;
-  box-sizing: border-box;
-  background-color: ${mainAccentColor};
-  cursor: pointer;
-  animation: 0.8s ease-in-out forwards ${abilityDescriptionAppear};
-`;
-
-const AbilityName = styled.p`
-  padding-bottom: 10px;
-`;
-
-const AbilityDescription = styled.p`
-  padding-bottom: 10px;
 `;
 
 const StatsWrapper = styled.div`

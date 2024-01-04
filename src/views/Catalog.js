@@ -27,8 +27,7 @@ function getFormattedId(id) {
   if (id.length > 4) {
     return `#${id}`;
   } else {
-    const str = `#000${id}`;
-
+    const str = `000${id}`;
     return str.slice(-4);
   }
 }
@@ -47,7 +46,7 @@ function Catalog({ pokemonType }) {
 
   async function getPokemonStats(value) {
     const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${value}`);
-    return await response.json();
+    return response.json();
   }
 
   async function getTypePokemons(type) {
@@ -85,16 +84,16 @@ function Catalog({ pokemonType }) {
     }));
   }
 
-  async function showPokemonPreviews(arr, iterator) {
+  function showPokemonPreviews(arr, iterator) {
     // to show 12 preview pokemon cards
     if (iterator < arr.length - 12) {
       for (let i = iterator; i < iterator + 12; i++) {
-        await createPokemonCardPreview(arr[i]);
+        createPokemonCardPreview(arr[i]);
       }
       setPokemonCatalogIterator(iterator + 12);
     } else {
       for (let i = iterator; i < iterator + (arr.length - iterator); i++) {
-        await createPokemonCardPreview(arr[i]);
+        createPokemonCardPreview(arr[i]);
       }
       setPokemonCatalogIterator(iterator + (arr.length - iterator));
     }
@@ -103,7 +102,7 @@ function Catalog({ pokemonType }) {
   async function createCatalog(type) {
     if (type != null) {
       const pokemonList = await getTypePokemons(type);
-      await showPokemonPreviews(pokemonList, 0);
+      showPokemonPreviews(pokemonList, 0);
     }
   }
 
