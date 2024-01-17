@@ -18,7 +18,7 @@ export function capitalizeFirstLetter(text) {
 
 export function formatId(id) {
   if (id.length > 4) {
-    return `#${id}`;
+    return `${id}`;
   } else {
     const str = `000${id}`;
     return str.slice(-4);

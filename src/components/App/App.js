@@ -13,7 +13,7 @@ const queryClient = new QueryClient();
 function App() {
   const [currentView, setCurrentView] = useState("home");
   const [inputValue, setInputValue] = useState(null);
-  const [initialForm, setInitialForm] = useState("blastoise-mega"); //thing to think
+  const [initialForm, setInitialForm] = useState("default"); //thing to think (for tests "blastoise-mega")
 
   function switchView(value) {
     setCurrentView(value);

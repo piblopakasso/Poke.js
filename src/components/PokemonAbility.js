@@ -1,8 +1,9 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 
-import { getAbilityInformation } from "../fetchFunctions";
+import { getAbilityData } from "../fetchFunctions";
 import { capitalizeFirstLetter } from "../utilityFunctions";
+import LoadingDots from "../components/LoadingDots";
 import styled from "styled-components";
 
 export default function PokemonAbility({ abilityName, hideDescription }) {
@@ -12,7 +13,7 @@ export default function PokemonAbility({ abilityName, hideDescription }) {
     isError,
   } = useQuery({
     queryFn: async function createPokemonAbilityCard() {
-      const ability = await getAbilityInformation(abilityName);
+      const ability = await getAbilityData(abilityName);
       return findAbilityDescription(ability);
     },
     queryKey: ["pokemonCard", abilityName],
@@ -36,30 +37,19 @@ export default function PokemonAbility({ abilityName, hideDescription }) {
     return abilityInfo;
   }
 
-  if (isLoading) {
-    return (
-      <AbilityDescriptionWrapper onClick={hideDescription}>
-        <AbilityName>{capitalizeFirstLetter(abilityName)}</AbilityName>
-        <AbilityDescription>is Loading...</AbilityDescription>
-      </AbilityDescriptionWrapper>
-    );
-  }
-
-  if (isError) {
-    return (
-      <AbilityDescriptionWrapper onClick={hideDescription}>
-        <AbilityName>{capitalizeFirstLetter(abilityName)}</AbilityName>
-        <AbilityDescription>
-          Oops... There is no information about this ability.
-        </AbilityDescription>
-      </AbilityDescriptionWrapper>
-    );
-  }
-
   return (
     <AbilityDescriptionWrapper onClick={hideDescription}>
       <AbilityName>{capitalizeFirstLetter(abilityName)}</AbilityName>
-      <AbilityDescription>{pokemonAbility.description}</AbilityDescription>
+      {isLoading ? (
+        <LoadingDots />
+      ) : (
+        <AbilityDescription>{pokemonAbility.description}</AbilityDescription>
+      )}
+      {isError && (
+        <AbilityDescription>
+          Oops... There is no information about this ability.
+        </AbilityDescription>
+      )}
     </AbilityDescriptionWrapper>
   );
 }

@@ -1,6 +1,6 @@
 import styled, { keyframes } from "styled-components";
 
-export default function IsLoading() {
+export default function LoadingCircle() {
   return (
     <>
       <AnimationWrapper>

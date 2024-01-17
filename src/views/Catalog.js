@@ -1,158 +1,123 @@
 import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
+import { useQuery } from "@tanstack/react-query";
 
-function getObjectValue(object, value, key) {
-  let arr = [];
-
-  for (const item of Object.values(object)) {
-    if (key === undefined) {
-      arr.push(item[value]);
-    } else {
-      arr.push(item[value][key]);
-    }
-  }
-
-  return arr;
-}
-
-function capitalizeFirstLetter(text) {
-  return text.charAt(0).toUpperCase() + text.slice(1);
-}
-
-function getFormattedName(name) {
-  return name.toUpperCase();
-}
-
-function getFormattedId(id) {
-  if (id.length > 4) {
-    return `#${id}`;
-  } else {
-    const str = `000${id}`;
-    return str.slice(-4);
-  }
-}
+import { getPokemonFormData, getTypeData } from "../fetchFunctions";
+import {
+  formatId,
+  formatName,
+  findObjectValue,
+  capitalizeFirstLetter,
+} from "../utilityFunctions";
+import LoadingCircle from "../components/LoadingCircle";
 
 function Catalog({ pokemonType }) {
-  const [pokemonCatalog, setPokemonCatalog] = useState({
-    touched: false,
+  const [catalogItemsCount, setCatalogItemsCount] = useState(0);
+  const [savedPokemonCatalog, setSavedPokemonCatalog] = useState([]);
+
+  const { data: pokemonList, isError: isListError } = useQuery({
+    queryFn: async function createPokemonList() {
+      return getPokemonsOfType(pokemonType);
+    },
+    queryKey: ["pokemonList", { pokemonType }],
   });
 
-  const [pokemonCatalogList, setPokemonCatalogList] = useState({});
-  const [pokemonCatalogIterator, setPokemonCatalogIterator] = useState(0);
+  const {
+    data: pokemonCatalog,
+    isLoading: isCatalogLoading,
+    isError: isCatalogError,
+    isSuccess: isCatalogSuccess,
+  } = useQuery({
+    queryFn: async function createPokemonCatalag() {
+      const promises = pokemonList
+        .slice(catalogItemsCount, catalogItemsCount + 12)
+        .map((item) => getPokemonFormData(item));
+
+      const pokemons = await Promise.all(promises);
+
+      return pokemons.map((pokemon) => ({
+        formName: formatName(pokemon.name),
+        specieName: formatName(pokemon.species.name),
+        formId: formatId(pokemon.id.toString()),
+        image: pokemon.sprites["front_default"],
+        types: findObjectValue(pokemon.types, "type", "name"),
+      }));
+    },
+    queryKey: ["pokemonCatalog", { pokemonList, catalogItemsCount }],
+  });
 
   useEffect(() => {
-    createCatalog(pokemonType);
+    if (isCatalogSuccess) {
+      setSavedPokemonCatalog(savedPokemonCatalog.concat(pokemonCatalog));
+    }
+  }, [pokemonCatalog, isCatalogSuccess]);
+
+  useEffect(() => {
+    setSavedPokemonCatalog([]);
+    setCatalogItemsCount(0);
   }, [pokemonType]);
 
-  async function getPokemonStats(value) {
-    const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${value}`);
-    return response.json();
-  }
-
-  async function getTypePokemons(type) {
-    const response = await fetch(`https://pokeapi.co/api/v2/type/${type}`);
-    const info = await response.json();
+  async function getPokemonsOfType(type) {
+    const data = await getTypeData(type);
     let list = [];
 
-    for (let key of info.pokemon) {
-      list.push(key.pokemon.name);
+    for (let item of data.pokemon) {
+      list.push(item.pokemon.name);
     }
-
-    setPokemonCatalog({
-      touched: true,
-      type: type,
-      pokemons: list,
-    });
-
-    setPokemonCatalogList({});
 
     return list;
   }
 
-  async function createPokemonCardPreview(pokemonName) {
-    const previewData = await getPokemonStats(pokemonName);
-
-    setPokemonCatalogList((prevState) => ({
-      ...prevState,
-      [pokemonName]: {
-        formName: getFormattedName(previewData.name),
-        specieName: getFormattedName(previewData.species.name),
-        formId: getFormattedId(previewData.id.toString()),
-        image: previewData.sprites["front_default"],
-        types: getObjectValue(previewData.types, "type", "name"),
-      },
-    }));
-  }
-
-  function showPokemonPreviews(arr, iterator) {
-    // to show 12 preview pokemon cards
-    if (iterator < arr.length - 12) {
-      for (let i = iterator; i < iterator + 12; i++) {
-        createPokemonCardPreview(arr[i]);
-      }
-      setPokemonCatalogIterator(iterator + 12);
+  function showMorePokemons() {
+    if (catalogItemsCount < pokemonList.length) {
+      setCatalogItemsCount(catalogItemsCount + 12);
     } else {
-      for (let i = iterator; i < iterator + (arr.length - iterator); i++) {
-        createPokemonCardPreview(arr[i]);
-      }
-      setPokemonCatalogIterator(iterator + (arr.length - iterator));
-    }
-  }
-
-  async function createCatalog(type) {
-    if (type != null) {
-      const pokemonList = await getTypePokemons(type);
-      showPokemonPreviews(pokemonList, 0);
+      setCatalogItemsCount(pokemonList.length);
     }
   }
 
   return (
     <>
-      {pokemonCatalog.touched && (
-        <PokemonCatalogWrapper>
-          <SortButton>Sort</SortButton>
-          <PokemonCatalog>
-            {Object.values(pokemonCatalogList).map((content, index) => (
-              <PokemonPreview key={index}>
-                <PokemonPreviewImageWrapper
-                  $borderColor={colors[pokemonCatalog.type]}
-                >
-                  <PokemonPreviewImage
-                    src={content.image}
-                    alt="Pokemon Image"
-                  />
-                </PokemonPreviewImageWrapper>
+      <PokemonCatalogWrapper>
+        <SortButton>Sort</SortButton>
+        <PokemonCatalog>
+          {savedPokemonCatalog.map((content, index) => (
+            <PokemonPreview key={index}>
+              <PokemonPreviewImageWrapper
+                $borderColor={colors[savedPokemonCatalog.type]}
+              >
+                <PokemonPreviewImage src={content.image} alt="Pokemon Image" />
+              </PokemonPreviewImageWrapper>
 
-                <PokemonPreviewID>#{content.formId}</PokemonPreviewID>
-                <PokemonPreviewName $textColor={colors[pokemonCatalog.type]}>
-                  {capitalizeFirstLetter(content.formName)}
-                </PokemonPreviewName>
-                <PokemonPreviewTypesWrapper>
-                  {content.types.map((text, index) => (
-                    <PokemonPreviewTypes
-                      $backgroundColor={colors[text]}
-                      key={index}
-                    >
-                      {capitalizeFirstLetter(text)}
-                    </PokemonPreviewTypes>
-                  ))}
-                </PokemonPreviewTypesWrapper>
-              </PokemonPreview>
-            ))}
-          </PokemonCatalog>
+              <PokemonPreviewID>#{content.formId}</PokemonPreviewID>
+              <PokemonPreviewName $textColor={colors[savedPokemonCatalog.type]}>
+                {capitalizeFirstLetter(content.formName)}
+              </PokemonPreviewName>
+              <PokemonPreviewTypesWrapper>
+                {content.types.map((text, index) => (
+                  <PokemonPreviewTypes
+                    $backgroundColor={colors[text]}
+                    key={index}
+                  >
+                    {capitalizeFirstLetter(text)}
+                  </PokemonPreviewTypes>
+                ))}
+              </PokemonPreviewTypesWrapper>
+            </PokemonPreview>
+          ))}
+        </PokemonCatalog>
 
-          <ShowMoreButton
-            onClick={() =>
-              showPokemonPreviews(
-                pokemonCatalog.pokemons,
-                pokemonCatalogIterator
-              )
-            }
-          >
-            Show more Pokemons!
-          </ShowMoreButton>
-        </PokemonCatalogWrapper>
-      )}
+        {isCatalogLoading && <LoadingCircle />}
+
+        <ShowMoreButton
+          disabled={
+            !isCatalogSuccess || catalogItemsCount === pokemonList.length
+          }
+          onClick={showMorePokemons}
+        >
+          Show more Pokemons!
+        </ShowMoreButton>
+      </PokemonCatalogWrapper>
     </>
   );
 }
@@ -292,5 +257,11 @@ const ShowMoreButton = styled.button`
 
   &:hover {
     background-color: gainsboro;
+  }
+
+  &:disabled {
+    color: darkgray;
+    background-color: gainsboro;
+    cursor: initial;
   }
 `;
