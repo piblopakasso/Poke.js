@@ -1,3 +1,10 @@
+export async function getPokemonList() {
+  const response = await fetch(
+    "https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0"
+  );
+  return response.json();
+}
+
 export async function getPokemonSpecieData(value) {
   const response = await fetch(
     `https://pokeapi.co/api/v2/pokemon-species/${value}`
