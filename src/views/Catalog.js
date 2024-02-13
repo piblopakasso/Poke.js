@@ -1,36 +1,62 @@
 import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, keepPreviousData } from "@tanstack/react-query";
 
-import { getPokemonFormData, getTypeData } from "../fetchFunctions";
+import {
+  getPokemonFormData,
+  getPokemonList,
+  getTypeData,
+} from "../fetchFunctions";
 import {
   formatId,
   formatName,
   findObjectValue,
   capitalizeFirstLetter,
+  findSimilarItems,
+  formatPokemonListData,
 } from "../utilityFunctions";
 import LoadingCircle from "../components/LoadingCircle";
+import { useSearchParams, useNavigate } from "react-router-dom";
 
-function Catalog({ pokemonType }) {
-  const [catalogItemsCount, setCatalogItemsCount] = useState(0);
-  const [savedPokemonCatalog, setSavedPokemonCatalog] = useState([]);
+function Catalog() {
+  const [catalogItemsCount, setCatalogItemsCount] = useState(12);
+  const [searchParams, setSearchParams] = useSearchParams({
+    option: "name",
+    query: "",
+  });
+  const searchOption = searchParams.get("option");
+  const searchQuery = searchParams.get("query");
+  const navigate = useNavigate();
 
-  const { data: pokemonList, isError: isListError } = useQuery({
+  const {
+    data: pokemonList,
+    isError: isListError,
+    isFetching: isListFetching,
+  } = useQuery({
     queryFn: async function createPokemonList() {
-      return getPokemonsOfType(pokemonType);
+      if (searchQuery === "") {
+        const list = await getPokemonList();
+        return list.results.map((item) => item.name);
+      } else if (searchOption === "name" && searchQuery !== "") {
+        const list = await getPokemonList();
+        const formattedData = formatPokemonListData(list);
+        return findSimilarItems(searchQuery, formattedData);
+      } else if (searchOption === "type") {
+        return await getPokemonsOfType(searchQuery);
+      }
     },
-    queryKey: ["pokemonList", { pokemonType }],
+    queryKey: ["pokemonList", { searchQuery }],
   });
 
   const {
-    data: pokemonCatalog,
-    isLoading: isCatalogLoading,
+    data: pokemonCatalog = [],
     isError: isCatalogError,
-    isSuccess: isCatalogSuccess,
+    isFetching: isCatalogFetching,
+    isPlaceholderData, //it does not work without 'isPlaceholderData'
   } = useQuery({
     queryFn: async function createPokemonCatalag() {
       const promises = pokemonList
-        .slice(catalogItemsCount, catalogItemsCount + 12)
+        .slice(0, catalogItemsCount)
         .map((item) => getPokemonFormData(item));
 
       const pokemons = await Promise.all(promises);
@@ -44,18 +70,12 @@ function Catalog({ pokemonType }) {
       }));
     },
     queryKey: ["pokemonCatalog", { pokemonList, catalogItemsCount }],
+    placeholderData: keepPreviousData,
   });
 
   useEffect(() => {
-    if (isCatalogSuccess) {
-      setSavedPokemonCatalog(savedPokemonCatalog.concat(pokemonCatalog));
-    }
-  }, [pokemonCatalog, isCatalogSuccess]);
-
-  useEffect(() => {
-    setSavedPokemonCatalog([]);
-    setCatalogItemsCount(0);
-  }, [pokemonType]);
+    setCatalogItemsCount(12);
+  }, [searchQuery]);
 
   async function getPokemonsOfType(type) {
     const data = await getTypeData(type);
@@ -76,21 +96,36 @@ function Catalog({ pokemonType }) {
     }
   }
 
+  function handleClick(name, form, id) {
+    if (name === form || id.length < 5) {
+      navigate(`/pokedex/${name.toLowerCase()}`);
+    } else {
+      navigate(`/pokedex/${name.toLowerCase()}?form=${form.toLowerCase()}`);
+    }
+  }
+
   return (
     <>
       <PokemonCatalogWrapper>
         <SortButton>Sort</SortButton>
         <PokemonCatalog>
-          {savedPokemonCatalog.map((content, index) => (
-            <PokemonPreview key={index}>
-              <PokemonPreviewImageWrapper
-                $borderColor={colors[savedPokemonCatalog.type]}
-              >
+          {pokemonCatalog?.map((content, index) => (
+            <PokemonPreview
+              key={index}
+              onClick={() =>
+                handleClick(
+                  content.specieName,
+                  content.formName,
+                  content.formId
+                )
+              }
+            >
+              <PokemonPreviewImageWrapper>
                 <PokemonPreviewImage src={content.image} alt="Pokemon Image" />
               </PokemonPreviewImageWrapper>
 
-              <PokemonPreviewID>#{content.formId}</PokemonPreviewID>
-              <PokemonPreviewName $textColor={colors[savedPokemonCatalog.type]}>
+              {/*<PokemonPreviewID>#{content.formId}</PokemonPreviewID>*/}
+              <PokemonPreviewName>
                 {capitalizeFirstLetter(content.formName)}
               </PokemonPreviewName>
               <PokemonPreviewTypesWrapper>
@@ -107,11 +142,11 @@ function Catalog({ pokemonType }) {
           ))}
         </PokemonCatalog>
 
-        {isCatalogLoading && <LoadingCircle />}
+        {(isListFetching || isCatalogFetching) && <LoadingCircle />}
 
         <ShowMoreButton
           disabled={
-            !isCatalogSuccess || catalogItemsCount === pokemonList.length
+            isCatalogFetching || catalogItemsCount >= pokemonList.length
           }
           onClick={showMorePokemons}
         >
@@ -190,6 +225,7 @@ const PokemonPreview = styled.div`
   outline: solid ${mainAccentColor} 4px;
   outline-offset: -4px;
   transition: 0.1s outline-offset ease-in-out;
+  text-decoration: none;
 
   &:hover {
     outline-offset: -1px;
@@ -200,11 +236,10 @@ const PokemonPreviewImageWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  border: solid ${(props) => props.$borderColor} 5px;
   border-radius: 50%;
   background-color: ${mainBackgroundColor};
-  width: 100px;
-  height: 100px;
+  width: 105px;
+  height: 105px;
   margin: 15px auto 10px;
 `;
 

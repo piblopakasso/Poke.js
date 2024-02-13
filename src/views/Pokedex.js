@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled, { css, keyframes } from "styled-components";
 import { useQuery } from "@tanstack/react-query";
 
@@ -12,14 +12,12 @@ import {
 } from "../utilityFunctions";
 import PokemonAbility from "../components/PokemonAbility";
 import LoadingCircle from "../components/LoadingCircle";
+import { useParams, useSearchParams } from "react-router-dom";
 
-export default function Pokedex({
-  pokemonName,
-  setPokemonName,
-  pokemonForm,
-  setPokemonForm,
-}) {
-  const [selectedForm, setSelectedForm] = useState(pokemonForm);
+export default function Pokedex() {
+  const { query } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [selectedForm, setSelectedForm] = useState(query);
   const [formsListShown, setFormsListShown] = useState(false);
   const [abilityDescription, setAbilityDescription] = useState({
     shown: false,
@@ -33,7 +31,7 @@ export default function Pokedex({
     isSuccess,
   } = useQuery({
     queryFn: async function createPokedexCard() {
-      const specie = await getPokemonSpecieData(pokemonName);
+      const specie = await getPokemonSpecieData(query);
       const forms = await getPokemonFormsData(specie.varieties);
 
       return {
@@ -44,30 +42,15 @@ export default function Pokedex({
         forms: forms,
       };
     },
-    queryKey: ["pokemonData", { pokemonName }],
+    queryKey: ["pokemonData", { query }],
   });
 
   useEffect(() => {
     if (isSuccess) {
-      setInitialForm(pokemonData);
       resetModals();
+      handleFormChange();
     }
-  }, [pokemonData, isSuccess]);
-
-  function setInitialForm(data) {
-    if (pokemonForm === "default") {
-      setSelectedForm(data.defaultForm);
-    }
-  }
-
-  function resetModals() {
-    setFormsListShown(false);
-    setAbilityDescription((prevState) => ({
-      ...prevState,
-      shown: false,
-      text: null,
-    }));
-  }
+  }, [isSuccess, pokemonData, selectedForm]);
 
   async function getPokemonFormsData(varieties) {
     const promises = varieties.map((item) =>
@@ -94,7 +77,7 @@ export default function Pokedex({
   }
 
   function findPokemonDescription(object) {
-    let description = "Lack of information. Research is ongoing.";
+    let description = "Lack of information. Research in progress.";
     for (let key of object.flavor_text_entries) {
       if (key.language.name === "en") {
         description = key.flavor_text;
@@ -105,18 +88,43 @@ export default function Pokedex({
     return description;
   }
 
+  function resetModals() {
+    setFormsListShown(false);
+    setAbilityDescription((prevState) => ({
+      ...prevState,
+      shown: false,
+      text: null,
+    }));
+  }
+
   function flipImage(e) {
-    if (pokemonData.imageBack === null) {
-      e.target.src = pokemonData.imageFront;
-    } else if (e.target.src === pokemonData.imageFront) {
-      e.target.src = pokemonData.imageBack;
+    const pokemon = pokemonData.forms[selectedForm];
+    if (pokemon.imageBack === null) {
+      e.target.src = pokemon.imageFront;
+    } else if (e.target.src === pokemon.imageFront) {
+      e.target.src = pokemon.imageBack;
     } else {
-      e.target.src = pokemonData.imageFront;
+      e.target.src = pokemon.imageFront;
     }
   }
 
   function changePokemonForm(e) {
-    setSelectedForm(e.target.textContent.toLowerCase());
+    const form = e.target.textContent.toLowerCase();
+    if (form === query) {
+      setSearchParams();
+    } else {
+      setSearchParams({ form: form });
+    }
+    setSelectedForm(form);
+  }
+
+  function handleFormChange() {
+    const form = searchParams.get("form");
+    if (form !== null) {
+      setSelectedForm(form);
+    } else {
+      setSelectedForm(query);
+    }
   }
 
   function togglePokemonForms() {
@@ -143,27 +151,27 @@ export default function Pokedex({
     }));
   }
 
-  function previousPokemon(id) {
-    let number = parseInt(id);
-    setPokemonForm("default");
-
-    if (number === 1) {
-      setPokemonName(1010);
-    } else {
-      setPokemonName(number - 1);
-    }
-  }
-
-  function nextPokemon(id) {
-    let number = parseInt(id);
-    setPokemonForm("default");
-
-    if (number === 1010) {
-      setPokemonName(1);
-    } else {
-      setPokemonName(number + 1);
-    }
-  }
+  // function previousPokemon(id) {
+  //   let number = parseInt(id);
+  //   setPokemonForm("default");
+  //
+  //   if (number === 1) {
+  //     setPokemonName(1010);
+  //   } else {
+  //     setPokemonName(number - 1);
+  //   }
+  // }
+  //
+  // function nextPokemon(id) {
+  //   let number = parseInt(id);
+  //   setPokemonForm("default");
+  //
+  //   if (number === 1010) {
+  //     setPokemonName(1);
+  //   } else {
+  //     setPokemonName(number + 1);
+  //   }
+  // }
 
   if (isLoading) {
     return <LoadingCircle />;
@@ -180,12 +188,12 @@ export default function Pokedex({
       >
         <PokemonId>#{pokemonData.id}</PokemonId>
 
-        <LeftArrowWrapper onClick={() => previousPokemon(pokemonData.id)}>
-          <LeftArrow>&lt;..</LeftArrow>
-        </LeftArrowWrapper>
-        <RightArrowWrapper onClick={() => nextPokemon(pokemonData.id)}>
-          <RightArrow>..&gt;</RightArrow>
-        </RightArrowWrapper>
+        {/*<LeftArrowWrapper onClick={() => previousPokemon(pokemonData.id)}>*/}
+        {/*  <LeftArrow>&lt;..</LeftArrow>*/}
+        {/*</LeftArrowWrapper>*/}
+        {/*<RightArrowWrapper onClick={() => nextPokemon(pokemonData.id)}>*/}
+        {/*  <RightArrow>..&gt;</RightArrow>*/}
+        {/*</RightArrowWrapper>*/}
       </IdWrapper>
 
       <PokemonInfo>
@@ -231,7 +239,6 @@ export default function Pokedex({
               {pokemonData.description}
             </PokemonDescription>
           </DescriptionWrapper>
-
           <HeightWrapper>
             Height
             <PokemonHeight
@@ -242,7 +249,6 @@ export default function Pokedex({
               {pokemonData.forms[selectedForm]?.height / 10} m
             </PokemonHeight>
           </HeightWrapper>
-
           <WeightWrapper>
             Weight
             <PokemonWeight

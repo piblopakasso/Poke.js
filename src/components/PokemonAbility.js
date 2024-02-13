@@ -16,7 +16,7 @@ export default function PokemonAbility({ abilityName, hideDescription }) {
       const ability = await getAbilityData(abilityName);
       return findAbilityDescription(ability);
     },
-    queryKey: ["pokemonCard", abilityName],
+    queryKey: ["pokemonAbility", abilityName],
   });
 
   function findAbilityDescription(object) {

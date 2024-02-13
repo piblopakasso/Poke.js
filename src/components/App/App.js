@@ -1,39 +1,29 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 
+import { Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import Home from "../../views/Home";
 import Pokedex from "../../views/Pokedex";
 import Catalog from "../../views/Catalog";
 import Navigation from "../Navigation";
+import PokedexInitialView from "../PokedexInitialView";
 
 const queryClient = new QueryClient();
 
 function App() {
-  const [currentView, setCurrentView] = useState("home");
-  const [inputValue, setInputValue] = useState(null);
-  const [initialForm, setInitialForm] = useState("default"); //thing to think (for tests "blastoise-mega")
-
-  function switchView(value) {
-    setCurrentView(value);
-  }
-
   return (
     <QueryClientProvider client={queryClient}>
       <StyledApp>
         <StyledAppHeader>
-          <Navigation onPageSelect={switchView} onSearch={setInputValue} />
-          {currentView === "home" && <Home />}
-          {currentView === "pokedex" && (
-            <Pokedex
-              pokemonName={inputValue}
-              setPokemonName={setInputValue}
-              pokemonForm={initialForm}
-              setPokemonForm={setInitialForm}
-            />
-          )}
-          {currentView === "catalog" && <Catalog pokemonType={inputValue} />}
+          <Navigation />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/pokedex" element={<PokedexInitialView />} />
+            <Route path="/pokedex/:query" element={<Pokedex />} />
+            <Route path="/catalog" element={<Catalog />} />
+          </Routes>
         </StyledAppHeader>
       </StyledApp>
     </QueryClientProvider>

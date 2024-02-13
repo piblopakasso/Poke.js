@@ -1,66 +1,34 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import styled from "styled-components";
 
-import { getPokemonList } from "../fetchFunctions";
-import { capitalizeFirstLetter } from "../utilityFunctions";
+import {
+  capitalizeFirstLetter,
+  translateIdToText,
+  findSimilarItems,
+  sortItems,
+} from "../utilityFunctions";
 import useClickOutside from "../hooks/useClickOutside";
-import { useQuery } from "@tanstack/react-query";
 
-export default function InputFieldByName({ inputValue, setInputValue }) {
-  const [suggestedList, setSuggestedList] = useState([]);
+export default function InputFieldByName({
+  pokemonList,
+  inputValue,
+  setInputValue,
+  suggestedList,
+  setSuggestedList,
+}) {
   const [suggestedListShown, setSuggestedListShown] = useState(false);
-
   const suggestedListSelect = useRef(null);
 
-  const { data: pokemonList, isError } = useQuery({
-    queryFn: async function createPokemonList() {
-      const list = await getPokemonList();
-
-      return list.results;
-    },
-    queryKey: ["pokemonList"],
-  });
-
-  useEffect(() => {
-    if (pokemonList) {
-      suggestPokemon();
-    }
-  }, [inputValue, pokemonList]);
-
-  function suggestPokemon() {
-    const nameList = pokemonList.map((item) => item.name);
-    const idList = pokemonList.map((item) =>
-      item.url.replace("https://pokeapi.co/api/v2/pokemon/", "").slice(0, -1)
-    );
-    const knownPokemons = idList.filter((id) => id.length <= 4); //we need only pokemons` ids. (pokemons have id with 1-4 digits, pokemons` forms have id with 5 digits)
-    const validTextInput =
-      isNaN(inputValue) && inputValue !== "" && inputValue.length >= 3;
-    const validNumberInput =
-      !isNaN(inputValue) &&
-      inputValue !== "" &&
-      inputValue <= knownPokemons.length;
-    let list = [];
-
-    if (validTextInput) {
-      list = nameList.filter((name) => name.includes(inputValue.toLowerCase()));
-    } else if (validNumberInput) {
-      const index = idList.indexOf(inputValue);
-      list = [nameList[index]];
-    }
-
-    setSuggestedList(list);
-  }
-
-  function checkPattern(input) {
+  function checkPattern(value) {
     const pattern = /^[a-zA-Z0-9-]+$/;
 
-    if (pattern.test(input) || input === "") {
-      setInputValue(input);
+    if (pattern.test(value) || value === "") {
+      setInputValue(value);
     }
   }
 
-  function toggleSuggestedList(input) {
-    if (input === "") {
+  function toggleSuggestedList(value) {
+    if (value === "") {
       setSuggestedListShown(false);
     } else {
       setSuggestedListShown(true);
@@ -72,15 +40,19 @@ export default function InputFieldByName({ inputValue, setInputValue }) {
   }
 
   function handleInputChange(e) {
-    const value = e.target.value;
+    const value = translateIdToText(e.target.value, pokemonList);
+    const list = sortItems(findSimilarItems(value, pokemonList));
 
-    checkPattern(value);
+    checkPattern(e.target.value);
     toggleSuggestedList(value);
+    setSuggestedList(list);
   }
 
   function substituteInputValue(e) {
     const text = e.target.textContent;
+
     setInputValue(text);
+    setSuggestedList([text.toLowerCase()]);
     hideSuggestedList();
   }
 
@@ -99,7 +71,7 @@ export default function InputFieldByName({ inputValue, setInputValue }) {
           {suggestedList.length === 0 ? (
             <NotFoundMessage>Pokemon not found</NotFoundMessage>
           ) : (
-            suggestedList.slice(0, 12).map((item, index) => (
+            suggestedList.slice(0, 6).map((item, index) => (
               <DropListOption key={index} onClick={substituteInputValue}>
                 {capitalizeFirstLetter(item)}
               </DropListOption>

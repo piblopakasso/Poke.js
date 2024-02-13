@@ -1,17 +1,38 @@
 import React, { useState, useRef } from "react";
-import styled, { css } from "styled-components";
-
+import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 import InputFieldByName from "./InputFieldByName";
 import InputFieldByType from "./InputFieldByType";
 import useClickOutside from "../hooks/useClickOutside";
+import { useQuery } from "@tanstack/react-query";
+import { getPokemonFormData, getPokemonList } from "../fetchFunctions";
+import { formatPokemonListData, translateIdToText } from "../utilityFunctions";
 
 export default function SearchBar() {
-  const [searchRequest, setSearchRequest] = useState("");
-
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResult, setSearchResult] = useState([]);
   const [searchOption, setSearchOption] = useState("Name");
   const [searchOptionsShown, setSearchOptionsShown] = useState(false);
-
+  const navigate = useNavigate();
   const searchOptionSelect = useRef(null);
+
+  const { data: allPokemons, isError } = useQuery({
+    queryFn: async function createPokemonList() {
+      const list = await getPokemonList();
+      return formatPokemonListData(list);
+    },
+    queryKey: ["allPokemons"],
+  });
+
+  const { refetch: refetchDefaulForm } = useQuery({
+    queryFn: async function convertToDefaultForm() {
+      const formData = await getPokemonFormData(searchQuery.toLowerCase());
+
+      return formData.species.name;
+    },
+    queryKey: ["defaultForm"],
+    enabled: false, //pokemons can have different forms based on their actual name (ex: venusaur-mega), this function gets the pokemon's actual pokemon name
+  });
 
   function toggleSearchOptionSelect() {
     if (searchOptionsShown) {
@@ -27,6 +48,41 @@ export default function SearchBar() {
 
   function chooseSearchOption(e) {
     setSearchOption(e.target.textContent);
+    setSearchQuery("");
+  }
+
+  async function checkSearchQuery(query) {
+    const queryIndex = allPokemons.names.indexOf(searchQuery.toLowerCase());
+    const numberOfSpecies = allPokemons.ids.length;
+    const validQuery = await refetchDefaulForm();
+
+    if (queryIndex > numberOfSpecies) {
+      navigate(`/pokedex/${validQuery.data}?form=${query}`);
+    } else {
+      navigate(`/pokedex/${validQuery.data}`);
+    }
+  } //this function checks if the pokemon name (ex: venusaur) or the pokemon form name (ex: venusaur-mega) was searched and according to result transfer to the necessary page
+
+  async function handleSubmit() {
+    const searchVariants = searchResult.length;
+    const formattedSearchQuery = translateIdToText(
+      searchQuery.toLowerCase(),
+      allPokemons
+    );
+
+    if (searchOption === "Type" && searchQuery !== "") {
+      navigate(
+        `/catalog?query=${searchQuery.toLowerCase()}&option=${searchOption.toLowerCase()}`
+      );
+    } else if (searchVariants === 1 && searchOption === "Name") {
+      await checkSearchQuery(formattedSearchQuery);
+    } else {
+      navigate(
+        `/catalog?query=${formattedSearchQuery}&option=${searchOption.toLowerCase()}`
+      );
+    }
+
+    setSearchQuery("");
   }
 
   useClickOutside(searchOptionSelect, hideSearchOptionSelect);
@@ -37,17 +93,22 @@ export default function SearchBar() {
         <span>Find your Pokemon!</span>
         {searchOption === "Name" ? (
           <InputFieldByName
-            inputValue={searchRequest}
-            setInputValue={setSearchRequest}
+            pokemonList={allPokemons}
+            inputValue={searchQuery}
+            setInputValue={setSearchQuery}
+            suggestedList={searchResult}
+            setSuggestedList={setSearchResult}
           />
         ) : (
           <InputFieldByType
-            selectedType={searchRequest}
-            setSelectedType={setSearchRequest}
+            selectedType={searchQuery}
+            setSelectedType={setSearchQuery}
           />
         )}
 
-        <SearchButton type="button">Search</SearchButton>
+        <SearchButton type="button" onClick={handleSubmit}>
+          Search
+        </SearchButton>
 
         <SearchOptionWrapper ref={searchOptionSelect}>
           <SearchOptionButton onClick={toggleSearchOptionSelect}>
