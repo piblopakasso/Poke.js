@@ -3,27 +3,40 @@ import styled from "styled-components";
 
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { getPokemonFormData } from "../fetchFunctions";
+import { getPokemonFormData, getPokemonList } from "../fetchFunctions";
+import { formatPokemonListData } from "../utilityFunctions";
 
 export default function PokedexInitialView() {
   const navigate = useNavigate();
 
+  const { data: allPokemons, isError } = useQuery({
+    queryFn: async function createPokemonList() {
+      const list = await getPokemonList();
+      return formatPokemonListData(list);
+    },
+    queryKey: ["allPokemons"],
+  });
+
   const { refetch: refetchDefaulForm } = useQuery({
     queryFn: async function convertToDefaultForm() {
-      const formData = await getPokemonFormData(searchQuery.toLowerCase());
+      const formData = await getPokemonFormData(generateRandomPokemonId());
 
       return formData.species.name;
     },
     queryKey: ["defaultForm"],
-    enabled: false, //pokemons can have different forms based on their actual name (ex: venusaur-mega), this function gets the pokemon's actual pokemon name
+    enabled: false,
   });
 
   function generateRandomPokemonId() {
-    return Math.floor(Math.random() * 1025) + 1;
+    const pokemonIds = allPokemons.ids;
+    const randomIndex = Math.floor(Math.random() * pokemonIds.length);
+
+    return pokemonIds[randomIndex];
   }
 
-  function handleClick() {
-    navigate(`/pokedex/${generateRandomPokemonId()}`);
+  async function handleClick() {
+    const defaultForm = await refetchDefaulForm();
+    navigate(`/pokedex/${defaultForm.data}`);
   }
 
   return (

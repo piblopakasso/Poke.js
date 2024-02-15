@@ -8,6 +8,8 @@ import { useQuery } from "@tanstack/react-query";
 import { getPokemonFormData, getPokemonList } from "../fetchFunctions";
 import { formatPokemonListData, translateIdToText } from "../utilityFunctions";
 
+import useDefaultForm from "../hooks/useDefaultForm";
+
 export default function SearchBar() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResult, setSearchResult] = useState([]);
@@ -24,7 +26,7 @@ export default function SearchBar() {
     queryKey: ["allPokemons"],
   });
 
-  const { refetch: refetchDefaulForm } = useQuery({
+  const { refetch: refetchDefaultForm } = useQuery({
     queryFn: async function convertToDefaultForm() {
       const formData = await getPokemonFormData(searchQuery.toLowerCase());
 
@@ -54,7 +56,7 @@ export default function SearchBar() {
   async function checkSearchQuery(query) {
     const queryIndex = allPokemons.names.indexOf(searchQuery.toLowerCase());
     const numberOfSpecies = allPokemons.ids.length;
-    const validQuery = await refetchDefaulForm();
+    const validQuery = await refetchDefaultForm();
 
     if (queryIndex > numberOfSpecies) {
       navigate(`/pokedex/${validQuery.data}?form=${query}`);
