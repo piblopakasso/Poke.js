@@ -12,6 +12,7 @@ import {
 } from "../utilityFunctions";
 import PokemonAbility from "../components/PokemonAbility";
 import LoadingCircle from "../components/LoadingCircle";
+import NavigationArrows from "../components/NavigationArrows";
 import { useParams, useSearchParams } from "react-router-dom";
 
 export default function Pokedex() {
@@ -110,7 +111,7 @@ export default function Pokedex() {
 
   function changePokemonForm(e) {
     const form = e.target.textContent.toLowerCase();
-    if (form === query) {
+    if (form === query || form === pokemonData.defaultForm) {
       setSearchParams();
     } else {
       setSearchParams({ form: form });
@@ -123,7 +124,7 @@ export default function Pokedex() {
     if (form !== null) {
       setSelectedForm(form);
     } else {
-      setSelectedForm(query);
+      setSelectedForm(pokemonData.defaultForm);
     }
   }
 
@@ -151,28 +152,6 @@ export default function Pokedex() {
     }));
   }
 
-  // function previousPokemon(id) {
-  //   let number = parseInt(id);
-  //   setPokemonForm("default");
-  //
-  //   if (number === 1) {
-  //     setPokemonName(1010);
-  //   } else {
-  //     setPokemonName(number - 1);
-  //   }
-  // }
-  //
-  // function nextPokemon(id) {
-  //   let number = parseInt(id);
-  //   setPokemonForm("default");
-  //
-  //   if (number === 1010) {
-  //     setPokemonName(1);
-  //   } else {
-  //     setPokemonName(number + 1);
-  //   }
-  // }
-
   if (isLoading) {
     return <LoadingCircle />;
   }
@@ -186,14 +165,8 @@ export default function Pokedex() {
       <IdWrapper
         $backgroundColor={colors[pokemonData.forms[selectedForm]?.types[0]]}
       >
+        <NavigationArrows currentPokemonId={pokemonData.id} />
         <PokemonId>#{pokemonData.id}</PokemonId>
-
-        {/*<LeftArrowWrapper onClick={() => previousPokemon(pokemonData.id)}>*/}
-        {/*  <LeftArrow>&lt;..</LeftArrow>*/}
-        {/*</LeftArrowWrapper>*/}
-        {/*<RightArrowWrapper onClick={() => nextPokemon(pokemonData.id)}>*/}
-        {/*  <RightArrow>..&gt;</RightArrow>*/}
-        {/*</RightArrowWrapper>*/}
       </IdWrapper>
 
       <PokemonInfo>
@@ -261,7 +234,7 @@ export default function Pokedex() {
           </WeightWrapper>
         </GeneralInfo>
 
-        <TypesWrapper className="types_wrapper">
+        <TypesWrapper>
           <h4>Types</h4>
           {pokemonData.forms[selectedForm]?.types.map((text, index) => (
             <PokemonTypes $backgroundColor={colors[text]} key={index}>
@@ -270,7 +243,7 @@ export default function Pokedex() {
           ))}
         </TypesWrapper>
 
-        <AbilitiesWrapper className="abilities_wrapper">
+        <AbilitiesWrapper>
           <h4>Abilities</h4>
           {pokemonData.forms[selectedForm]?.abilities.map((text, index) => (
             <PokemonAbilities
@@ -360,57 +333,6 @@ const PokemonId = styled.div`
   font-size: 160px;
   color: ${mainBackgroundColor};
   opacity: 0.33;
-`;
-
-const LeftArrowWrapper = styled.div`
-  position: absolute;
-  left: -5%;
-  top: 0;
-  height: 100%;
-  width: 10%;
-  user-select: none;
-  transition: left 0.3s ease;
-  z-index: 101;
-
-  &:hover {
-    left: 0;
-  }
-`;
-
-const LeftArrow = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  width: 50%;
-  background-color: ${mainAccentColor};
-  cursor: pointer;
-`;
-
-const RightArrowWrapper = styled.div`
-  position: absolute;
-  right: -5%;
-  top: 0;
-  height: 100%;
-  width: 10%;
-  user-select: none;
-  transition: right 0.3s ease;
-  z-index: 101;
-
-  &:hover {
-    right: 0;
-  }
-`;
-
-const RightArrow = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  width: 50%;
-  float: right;
-  background-color: ${mainAccentColor};
-  cursor: pointer;
 `;
 
 const ImageWrapper = styled.div`

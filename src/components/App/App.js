@@ -8,7 +8,7 @@ import Home from "../../views/Home";
 import Pokedex from "../../views/Pokedex";
 import Catalog from "../../views/Catalog";
 import Navigation from "../Navigation";
-import PokedexInitialView from "../PokedexInitialView";
+import PokedexInitialView from "../../views/PokedexInitialView";
 
 const queryClient = new QueryClient();
 

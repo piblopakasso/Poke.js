@@ -8,8 +8,6 @@ import { useQuery } from "@tanstack/react-query";
 import { getPokemonFormData, getPokemonList } from "../fetchFunctions";
 import { formatPokemonListData, translateIdToText } from "../utilityFunctions";
 
-import useDefaultForm from "../hooks/useDefaultForm";
-
 export default function SearchBar() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResult, setSearchResult] = useState([]);
