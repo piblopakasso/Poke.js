@@ -2,38 +2,36 @@ import React, { useRef, useState } from "react";
 import styled, { css } from "styled-components";
 
 import { capitalizeFirstLetter } from "../utilityFunctions";
+import { mainBackgroundColor, colors } from "../appColors";
 import useClickOutside from "../hooks/useClickOutside";
+
+const types = [
+  "normal",
+  "fighting",
+  "flying",
+  "poison",
+  "ground",
+  "rock",
+  "bug",
+  "ghost",
+  "steel",
+  "fire",
+  "water",
+  "grass",
+  "electric",
+  "psychic",
+  "ice",
+  "dragon",
+  "dark",
+  "fairy",
+];
 
 export default function InputFieldByType({ selectedType, setSelectedType }) {
   const [dropListShown, setDropListShown] = useState(false);
-  const types = [
-    "normal",
-    "fighting",
-    "flying",
-    "poison",
-    "ground",
-    "rock",
-    "bug",
-    "ghost",
-    "steel",
-    "fire",
-    "water",
-    "grass",
-    "electric",
-    "psychic",
-    "ice",
-    "dragon",
-    "dark",
-    "fairy",
-  ];
   const pokemonTypeSelect = useRef(null);
 
   function togglePokemonTypeSelect() {
-    if (dropListShown) {
-      setDropListShown(false);
-    } else {
-      setDropListShown(true);
-    }
+    dropListShown ? setDropListShown(false) : setDropListShown(true);
   }
 
   function hidePokemonTypeSelect() {
@@ -73,29 +71,6 @@ export default function InputFieldByType({ selectedType, setSelectedType }) {
     </TypeSelectWrapper>
   );
 }
-
-const mainBackgroundColor = "#F5F5F5";
-
-const colors = {
-  normal: "#bca38f",
-  fighting: "#fa8072",
-  flying: "#9ee1e0",
-  poison: "#9bc51a",
-  ground: "#b67d37",
-  rock: "#3a3736",
-  bug: "#449d31",
-  steel: "#8d9d9f",
-  ghost: "#896fb4",
-  fire: "#ff4c4c",
-  water: "#2fadd3",
-  grass: "#8fbc8f",
-  electric: "#f1c91f",
-  psychic: "#c553b4",
-  ice: "#cddade",
-  dragon: "#ea7638",
-  dark: "#29314a",
-  fairy: "#e8a8dd",
-};
 
 const TypeSelectWrapper = styled.div`
   position: relative;

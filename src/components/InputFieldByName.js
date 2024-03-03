@@ -7,7 +7,14 @@ import {
   findSimilarItems,
   sortItems,
 } from "../utilityFunctions";
+import { mainBackgroundColor, mainAccentColor } from "../appColors";
 import useClickOutside from "../hooks/useClickOutside";
+
+function checkPattern(value) {
+  const pattern = /^[a-zA-Z0-9-]+$/;
+
+  return pattern.test(value);
+}
 
 export default function InputFieldByName({
   pokemonList,
@@ -19,20 +26,8 @@ export default function InputFieldByName({
   const [suggestedListShown, setSuggestedListShown] = useState(false);
   const suggestedListSelect = useRef(null);
 
-  function checkPattern(value) {
-    const pattern = /^[a-zA-Z0-9-]+$/;
-
-    if (pattern.test(value) || value === "") {
-      setInputValue(value);
-    }
-  }
-
   function toggleSuggestedList(value) {
-    if (value === "") {
-      setSuggestedListShown(false);
-    } else {
-      setSuggestedListShown(true);
-    }
+    value === "" ? setSuggestedListShown(false) : setSuggestedListShown(true);
   }
 
   function hideSuggestedList() {
@@ -43,7 +38,9 @@ export default function InputFieldByName({
     const value = translateIdToText(e.target.value, pokemonList);
     const list = sortItems(findSimilarItems(value, pokemonList));
 
-    checkPattern(e.target.value);
+    if (checkPattern(e.target.value) || e.target.value === "") {
+      setInputValue(e.target.value);
+    }
     toggleSuggestedList(value);
     setSuggestedList(list);
   }
@@ -82,9 +79,6 @@ export default function InputFieldByName({
     </SearchInputWrapper>
   );
 }
-
-const mainBackgroundColor = "#F5F5F5";
-const mainAccentColor = "#282c34";
 
 const SearchInputWrapper = styled.div`
   position: relative;

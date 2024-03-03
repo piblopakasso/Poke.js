@@ -9,18 +9,25 @@ import {
 } from "../fetchFunctions";
 import {
   formatId,
-  formatName,
-  findObjectValue,
+  findValue,
   capitalizeFirstLetter,
   findSimilarItems,
   formatPokemonListData,
 } from "../utilityFunctions";
+import { mainBackgroundColor, mainAccentColor, colors } from "../appColors";
 import LoadingCircle from "../components/LoadingCircle";
+import ErrorPage from "./ErrorPage";
 import { useSearchParams, useNavigate } from "react-router-dom";
 
-function Catalog() {
+async function getPokemonsOfType(type) {
+  const data = await getTypeData(type);
+
+  return data.pokemon.map((item) => item.pokemon.name);
+}
+
+export default function Catalog() {
   const [catalogItemsCount, setCatalogItemsCount] = useState(12);
-  const [searchParams, setSearchParams] = useSearchParams({
+  const [searchParams] = useSearchParams({
     option: "name",
     query: "",
   });
@@ -28,12 +35,8 @@ function Catalog() {
   const searchQuery = searchParams.get("query");
   const navigate = useNavigate();
 
-  const {
-    data: pokemonList,
-    isError: isListError,
-    isFetching: isListFetching,
-  } = useQuery({
-    queryFn: async function createPokemonList() {
+  const { data: pokemonList, isError: isListError } = useQuery({
+    queryFn: async function () {
       if (searchQuery === "") {
         const list = await getPokemonList();
         return list.results.map((item) => item.name);
@@ -49,24 +52,24 @@ function Catalog() {
   });
 
   const {
-    data: pokemonCatalog = [],
+    data: pokemonCatalog,
     isError: isCatalogError,
+    isLoading: isCatalogLoading,
     isFetching: isCatalogFetching,
-    isPlaceholderData, //it does not work without 'isPlaceholderData'
   } = useQuery({
-    queryFn: async function createPokemonCatalag() {
+    queryFn: async function () {
       const promises = pokemonList
         .slice(0, catalogItemsCount)
-        .map((item) => getPokemonFormData(item));
+        .map(getPokemonFormData);
 
       const pokemons = await Promise.all(promises);
 
       return pokemons.map((pokemon) => ({
-        formName: formatName(pokemon.name),
-        specieName: formatName(pokemon.species.name),
+        formName: pokemon.name.toUpperCase(),
+        specieName: pokemon.species.name.toUpperCase(),
         formId: formatId(pokemon.id.toString()),
         image: pokemon.sprites["front_default"],
-        types: findObjectValue(pokemon.types, "type", "name"),
+        types: findValue(pokemon.types, "type", "name"),
       }));
     },
     queryKey: ["pokemonCatalog", { pokemonList, catalogItemsCount }],
@@ -76,17 +79,6 @@ function Catalog() {
   useEffect(() => {
     setCatalogItemsCount(12);
   }, [searchQuery]);
-
-  async function getPokemonsOfType(type) {
-    const data = await getTypeData(type);
-    let list = [];
-
-    for (let item of data.pokemon) {
-      list.push(item.pokemon.name);
-    }
-
-    return list;
-  }
 
   function showMorePokemons() {
     if (catalogItemsCount < pokemonList.length) {
@@ -104,87 +96,55 @@ function Catalog() {
     }
   }
 
+  if (isCatalogLoading) {
+    return <LoadingCircle />;
+  }
+
+  if (isListError || isCatalogError) {
+    return <ErrorPage />;
+  }
+
   return (
-    <>
-      <PokemonCatalogWrapper>
-        <SortButton>Sort</SortButton>
-        <PokemonCatalog>
-          {pokemonCatalog?.map((content, index) => (
-            <PokemonPreview
-              key={index}
-              onClick={() =>
-                handleClick(
-                  content.specieName,
-                  content.formName,
-                  content.formId
-                )
-              }
-            >
-              <PokemonPreviewImageWrapper>
-                <PokemonPreviewImage src={content.image} alt="Pokemon Image" />
-              </PokemonPreviewImageWrapper>
+    <PokemonCatalogWrapper>
+      <SortButton>Sort</SortButton>
+      <PokemonCatalog>
+        {pokemonCatalog?.map((content, index) => (
+          <PokemonPreview
+            key={index}
+            onClick={() =>
+              handleClick(content.specieName, content.formName, content.formId)
+            }
+          >
+            <PokemonPreviewImageWrapper>
+              <PokemonPreviewImage src={content.image} alt="Pokemon Image" />
+            </PokemonPreviewImageWrapper>
 
-              {/*<PokemonPreviewID>#{content.formId}</PokemonPreviewID>*/}
-              <PokemonPreviewName>
-                {capitalizeFirstLetter(content.formName)}
-              </PokemonPreviewName>
-              <PokemonPreviewTypesWrapper>
-                {content.types.map((text, index) => (
-                  <PokemonPreviewTypes
-                    $backgroundColor={colors[text]}
-                    key={index}
-                  >
-                    {capitalizeFirstLetter(text)}
-                  </PokemonPreviewTypes>
-                ))}
-              </PokemonPreviewTypesWrapper>
-            </PokemonPreview>
-          ))}
-        </PokemonCatalog>
+            <PokemonPreviewName>
+              {capitalizeFirstLetter(content.formName)}
+            </PokemonPreviewName>
+            <PokemonPreviewTypesWrapper>
+              {content.types.map((text, index) => (
+                <PokemonPreviewTypes
+                  $backgroundColor={colors[text]}
+                  key={index}
+                >
+                  {capitalizeFirstLetter(text)}
+                </PokemonPreviewTypes>
+              ))}
+            </PokemonPreviewTypesWrapper>
+          </PokemonPreview>
+        ))}
+      </PokemonCatalog>
 
-        {(isListFetching || isCatalogFetching) && <LoadingCircle />}
-
-        <ShowMoreButton
-          disabled={
-            isCatalogFetching || catalogItemsCount >= pokemonList.length
-          }
-          onClick={showMorePokemons}
-        >
-          Show more Pokemons!
-        </ShowMoreButton>
-      </PokemonCatalogWrapper>
-    </>
+      <ShowMoreButton
+        disabled={isCatalogFetching || catalogItemsCount >= pokemonList.length}
+        onClick={showMorePokemons}
+      >
+        Show more Pokemons!
+      </ShowMoreButton>
+    </PokemonCatalogWrapper>
   );
 }
-
-export default Catalog;
-
-const mainBackgroundColor = "#F5F5F5";
-const mainAccentColor = "#282c34";
-const additionalAccentColor = "#dcdcdc";
-
-const colors = {
-  normal: "#bca38f",
-  fighting: "#fa8072",
-  flying: "#9ee1e0",
-  poison: "#9bc51a",
-  ground: "#b67d37",
-  rock: "#3a3736",
-  bug: "#449d31",
-  steel: "#8d9d9f",
-  ghost: "#896fb4",
-  fire: "#ff4c4c",
-  water: "#2fadd3",
-  grass: "#8fbc8f",
-  electric: "#f1c91f",
-  psychic: "#c553b4",
-  ice: "#cddade",
-  dragon: "#ea7638",
-  dark: "#29314a",
-  fairy: "#e8a8dd",
-  shadow: "#542693",
-  unknown: "#17ccad",
-};
 
 const PokemonCatalogWrapper = styled.div`
   display: flex;

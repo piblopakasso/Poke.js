@@ -5,20 +5,60 @@ import { useQuery } from "@tanstack/react-query";
 import { getPokemonSpecieData, getPokemonFormData } from "../fetchFunctions";
 import {
   formatId,
-  formatName,
-  findObjectValue,
+  findValue,
   removeDuplicate,
   capitalizeFirstLetter,
 } from "../utilityFunctions";
+import {
+  mainBackgroundColor,
+  mainAccentColor,
+  additionalAccentColor,
+  colors,
+} from "../appColors";
 import PokemonAbility from "../components/PokemonAbility";
 import LoadingCircle from "../components/LoadingCircle";
+import ErrorPage from "./ErrorPage";
 import NavigationArrows from "../components/NavigationArrows";
 import { useParams, useSearchParams } from "react-router-dom";
+
+async function getPokemonFormsData(arr) {
+  const promises = arr.map((item) => getPokemonFormData(item.pokemon.name));
+  const forms = await Promise.all(promises);
+
+  return forms.reduce((obj, form) => {
+    return {
+      ...obj,
+      [form.name]: {
+        imageFront: form.sprites["front_default"],
+        imageBack: form.sprites["back_default"],
+        types: findValue(form.types, "type", "name"),
+        height: form.height,
+        weight: form.weight,
+        abilities: removeDuplicate(
+          findValue(form.abilities, "ability", "name")
+        ),
+        stats: findValue(form.stats, "base_stat"),
+      },
+    };
+  }, {});
+}
+
+function findPokemonDescription(arr) {
+  let description = "Lack of information. Research in progress.";
+  for (let item of arr) {
+    if (item.language.name === "en") {
+      description = item.flavor_text;
+    }
+  }
+
+  return description;
+}
 
 export default function Pokedex() {
   const { query } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedForm, setSelectedForm] = useState(query);
+  const [pokemonImage, setPokemonImage] = useState();
   const [formsListShown, setFormsListShown] = useState(false);
   const [abilityDescription, setAbilityDescription] = useState({
     shown: false,
@@ -31,14 +71,14 @@ export default function Pokedex() {
     isError,
     isSuccess,
   } = useQuery({
-    queryFn: async function createPokedexCard() {
+    queryFn: async function () {
       const specie = await getPokemonSpecieData(query);
       const forms = await getPokemonFormsData(specie.varieties);
 
       return {
         id: formatId(specie.id),
-        name: formatName(specie.name),
-        description: findPokemonDescription(specie),
+        name: specie.name.toUpperCase(),
+        description: findPokemonDescription(specie.flavor_text_entries),
         defaultForm: specie.varieties[0].pokemon.name,
         forms: forms,
       };
@@ -50,44 +90,9 @@ export default function Pokedex() {
     if (isSuccess) {
       resetModals();
       handleFormChange();
+      setPokemonImage(pokemonData.forms[selectedForm]?.imageFront);
     }
   }, [isSuccess, pokemonData, selectedForm]);
-
-  async function getPokemonFormsData(varieties) {
-    const promises = varieties.map((item) =>
-      getPokemonFormData(item.pokemon.name)
-    );
-    const forms = await Promise.all(promises);
-
-    return forms.reduce((obj, form) => {
-      return {
-        ...obj,
-        [form.name]: {
-          imageFront: form.sprites["front_default"],
-          imageBack: form.sprites["back_default"],
-          types: findObjectValue(form.types, "type", "name"),
-          height: form.height,
-          weight: form.weight,
-          abilities: removeDuplicate(
-            findObjectValue(form.abilities, "ability", "name")
-          ),
-          stats: findObjectValue(form.stats, "base_stat"),
-        },
-      };
-    }, {});
-  }
-
-  function findPokemonDescription(object) {
-    let description = "Lack of information. Research in progress.";
-    for (let key of object.flavor_text_entries) {
-      if (key.language.name === "en") {
-        description = key.flavor_text;
-        //break; without break it will get the last (newest) english description
-      }
-    }
-
-    return description;
-  }
 
   function resetModals() {
     setFormsListShown(false);
@@ -98,14 +103,14 @@ export default function Pokedex() {
     }));
   }
 
-  function flipImage(e) {
+  function flipImage() {
     const pokemon = pokemonData.forms[selectedForm];
     if (pokemon.imageBack === null) {
-      e.target.src = pokemon.imageFront;
-    } else if (e.target.src === pokemon.imageFront) {
-      e.target.src = pokemon.imageBack;
+      setPokemonImage(pokemon.imageFront);
+    } else if (pokemonImage === pokemon.imageFront) {
+      setPokemonImage(pokemon.imageBack);
     } else {
-      e.target.src = pokemon.imageFront;
+      setPokemonImage(pokemon.imageFront);
     }
   }
 
@@ -157,7 +162,7 @@ export default function Pokedex() {
   }
 
   if (isError) {
-    return <div>Error</div>;
+    return <ErrorPage />;
   }
 
   return (
@@ -172,7 +177,7 @@ export default function Pokedex() {
       <PokemonInfo>
         <ImageWrapper>
           <PokemonImage
-            src={pokemonData.forms[selectedForm]?.imageFront}
+            src={pokemonImage}
             alt="Pokemon image"
             onClick={flipImage}
           />
@@ -289,33 +294,6 @@ export default function Pokedex() {
     </>
   );
 }
-
-const mainBackgroundColor = "#F5F5F5";
-const mainAccentColor = "#282c34";
-const additionalAccentColor = "#dcdcdc";
-
-const colors = {
-  normal: "#bca38f",
-  fighting: "#fa8072",
-  flying: "#9ee1e0",
-  poison: "#9bc51a",
-  ground: "#b67d37",
-  rock: "#3a3736",
-  bug: "#449d31",
-  steel: "#8d9d9f",
-  ghost: "#896fb4",
-  fire: "#ff4c4c",
-  water: "#2fadd3",
-  grass: "#8fbc8f",
-  electric: "#f1c91f",
-  psychic: "#c553b4",
-  ice: "#cddade",
-  dragon: "#ea7638",
-  dark: "#29314a",
-  fairy: "#e8a8dd",
-  shadow: "#542693",
-  unknown: "#17ccad",
-};
 
 const IdWrapper = styled.div`
   position: relative;

@@ -9,6 +9,7 @@ import Pokedex from "../../views/Pokedex";
 import Catalog from "../../views/Catalog";
 import Navigation from "../Navigation";
 import PokedexInitialView from "../../views/PokedexInitialView";
+import PageNotFound from "../../views/PageNotFound";
 
 const queryClient = new QueryClient();
 
@@ -16,15 +17,14 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <StyledApp>
-        <StyledAppHeader>
-          <Navigation />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/pokedex" element={<PokedexInitialView />} />
-            <Route path="/pokedex/:query" element={<Pokedex />} />
-            <Route path="/catalog" element={<Catalog />} />
-          </Routes>
-        </StyledAppHeader>
+        <Navigation />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/pokedex" element={<PokedexInitialView />} />
+          <Route path="/pokedex/:query" element={<Pokedex />} />
+          <Route path="/catalog" element={<Catalog />} />
+          <Route path="*" element={<PageNotFound />} />
+        </Routes>
       </StyledApp>
     </QueryClientProvider>
   );
@@ -34,9 +34,6 @@ export default App;
 
 const StyledApp = styled.div`
   font-family: "Roboto", sans-serif;
-`;
-
-const StyledAppHeader = styled.header`
   background-color: whitesmoke;
   min-height: 100vh;
   color: #282c34;

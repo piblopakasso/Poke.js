@@ -1,54 +1,50 @@
 import React from "react";
 import styled from "styled-components";
 
-function Home() {
+export default function Home() {
   return (
-    <>
-      <HomeWrapper>
-        <MainTitle>About</MainTitle>
+    <HomeWrapper>
+      <MainTitle>About</MainTitle>
 
-        <ContentWrapper>
-          <ParagraphWrapper>
-            <ParagraphTitle>What is this?</ParagraphTitle>
+      <ContentWrapper>
+        <ParagraphWrapper>
+          <ParagraphTitle>What is this?</ParagraphTitle>
 
-            <ParagraphText>
-              This is a little project that I decided to make from scratch to
-              show and prove (at least to myself) that I can create something.
-              It is far from perfection, however, I am glad that I have evolved
-              (pokemon reference) in something more viable than just another guy
-              that finished 2-days online courses.
-            </ParagraphText>
-          </ParagraphWrapper>
+          <ParagraphText>
+            This is a little project that I decided to make from scratch to show
+            and prove (at least to myself) that I can create something. It is
+            far from perfection, however, I am glad that I have evolved (pokemon
+            reference) in something more viable than just another guy that
+            finished 2-days online courses.
+          </ParagraphText>
+        </ParagraphWrapper>
 
-          <ParagraphWrapper>
-            <ParagraphTitle>Why Pokemons?</ParagraphTitle>
+        <ParagraphWrapper>
+          <ParagraphTitle>Why Pokemons?</ParagraphTitle>
 
-            <ParagraphText>
-              Surprisingly the PokeApi showed itself as a well designed,
-              understandable and fun to work with API. In addition to that, Not
-              surprisingly at all, pokemons are adorable. I really enjoyed
-              developing this lil project.
-            </ParagraphText>
-          </ParagraphWrapper>
+          <ParagraphText>
+            Surprisingly the PokeApi showed itself as a well designed,
+            understandable and fun to work with API. In addition to that, Not
+            surprisingly at all, pokemons are adorable. I really enjoyed
+            developing this lil project.
+          </ParagraphText>
+        </ParagraphWrapper>
 
-          <ParagraphWrapper>
-            <ParagraphTitle>What was used?</ParagraphTitle>
+        <ParagraphWrapper>
+          <ParagraphTitle>What was used?</ParagraphTitle>
 
-            <ParagraphText>Piu pau Bla bla Shimba bumba</ParagraphText>
-          </ParagraphWrapper>
-        </ContentWrapper>
-      </HomeWrapper>
-    </>
+          <ParagraphText>Piu pau Bla bla Shimba bumba</ParagraphText>
+        </ParagraphWrapper>
+      </ContentWrapper>
+    </HomeWrapper>
   );
 }
-
-export default Home;
 
 const HomeWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 600px;
-  margin: 0 auto;
+  margin: 70px auto;
   font-size: 18px;
 `;
 

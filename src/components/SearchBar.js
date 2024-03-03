@@ -7,6 +7,7 @@ import useClickOutside from "../hooks/useClickOutside";
 import { useQuery } from "@tanstack/react-query";
 import { getPokemonFormData, getPokemonList } from "../fetchFunctions";
 import { formatPokemonListData, translateIdToText } from "../utilityFunctions";
+import { mainBackgroundColor, mainAccentColor } from "../appColors";
 
 export default function SearchBar() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -16,16 +17,16 @@ export default function SearchBar() {
   const navigate = useNavigate();
   const searchOptionSelect = useRef(null);
 
-  const { data: allPokemons, isError } = useQuery({
-    queryFn: async function createPokemonList() {
+  const { data: allPokemons } = useQuery({
+    queryFn: async function () {
       const list = await getPokemonList();
       return formatPokemonListData(list);
     },
     queryKey: ["allPokemons"],
   });
 
-  const { refetch: refetchDefaultForm } = useQuery({
-    queryFn: async function convertToDefaultForm() {
+  const { refetch: refetchDefaultForm, isFetching } = useQuery({
+    queryFn: async function () {
       const formData = await getPokemonFormData(searchQuery.toLowerCase());
 
       return formData.species.name;
@@ -35,11 +36,9 @@ export default function SearchBar() {
   });
 
   function toggleSearchOptionSelect() {
-    if (searchOptionsShown) {
-      setSearchOptionsShown(false);
-    } else {
-      setSearchOptionsShown(true);
-    }
+    searchOptionsShown
+      ? setSearchOptionsShown(false)
+      : setSearchOptionsShown(true);
   }
 
   function hideSearchOptionSelect() {
@@ -106,7 +105,11 @@ export default function SearchBar() {
           />
         )}
 
-        <SearchButton type="button" onClick={handleSubmit}>
+        <SearchButton
+          type="button"
+          disabled={isFetching}
+          onClick={handleSubmit}
+        >
           Search
         </SearchButton>
 
@@ -125,9 +128,6 @@ export default function SearchBar() {
     </>
   );
 }
-
-const mainBackgroundColor = "#F5F5F5";
-const mainAccentColor = "#282c34";
 
 const SearchWrapper = styled.div`
   display: flex;

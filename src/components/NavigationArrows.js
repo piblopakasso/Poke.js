@@ -4,13 +4,14 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getPokemonFormData, getPokemonList } from "../fetchFunctions";
 import { formatId, formatPokemonListData } from "../utilityFunctions";
+import { mainAccentColor } from "../appColors";
 import LoadingDots from "./LoadingDots";
 
 export default function NavigationArrows({ currentPokemonId }) {
   const navigate = useNavigate();
 
   const { data: allPokemons, isError: isAllPokemonsError } = useQuery({
-    queryFn: async function createPokemonList() {
+    queryFn: async function () {
       const list = await getPokemonList();
       return formatPokemonListData(list);
     },
@@ -21,20 +22,21 @@ export default function NavigationArrows({ currentPokemonId }) {
     data: adjacentPokemonsData,
     isError: isAdjacentPokemonsDataError,
     isLoading: isAdjacentPokemonsDataLoading,
+    isSuccess,
   } = useQuery({
-    queryFn: async function createAdjacentPreviews() {
+    queryFn: async function () {
       const adjacentPokemons = findAdjucentPokemons();
-      const promises = adjacentPokemons.map((item) => getPokemonFormData(item));
-      const data = await Promise.all(promises);
+      const promises = adjacentPokemons.map(getPokemonFormData);
+      const [previous, next] = await Promise.all(promises);
 
       return {
         prevPokemon: {
-          name: data[0].species.name.toUpperCase(),
-          id: formatId(data[0].id),
+          name: previous.species.name.toUpperCase(),
+          id: formatId(previous.id),
         },
         nextPokemon: {
-          name: data[1].species.name.toUpperCase(),
-          id: formatId(data[1].id),
+          name: next.species.name.toUpperCase(),
+          id: formatId(next.id),
         },
       };
     },
@@ -42,13 +44,13 @@ export default function NavigationArrows({ currentPokemonId }) {
   });
 
   function findAdjucentPokemons() {
-    const previousPokemonId = previousPokemon();
-    const nextPokemonId = nextPokemon();
+    const previousPokemonId = findPrevPokemon();
+    const nextPokemonId = findNextPokemon();
 
     return [previousPokemonId, nextPokemonId];
   }
 
-  function previousPokemon() {
+  function findPrevPokemon() {
     if (parseInt(currentPokemonId) === 1) {
       return allPokemons.ids.length;
     } else {
@@ -56,7 +58,7 @@ export default function NavigationArrows({ currentPokemonId }) {
     }
   }
 
-  function nextPokemon() {
+  function findNextPokemon() {
     if (parseInt(currentPokemonId) === allPokemons.ids.length) {
       return 1;
     } else {
@@ -65,7 +67,9 @@ export default function NavigationArrows({ currentPokemonId }) {
   }
 
   function handleClick(name) {
-    navigate(`/pokedex/${name.toLowerCase()}`);
+    if (isSuccess) {
+      navigate(`/pokedex/${name.toLowerCase()}`);
+    }
   }
 
   return (
@@ -73,7 +77,7 @@ export default function NavigationArrows({ currentPokemonId }) {
       <NavigationArrowsWrapper>
         <LeftArrowWrapper>
           <LeftArrow
-            onClick={() => handleClick(adjacentPokemonsData.prevPokemon.name)}
+            onClick={() => handleClick(adjacentPokemonsData?.prevPokemon.name)}
           >
             {isAdjacentPokemonsDataLoading ? (
               <LoadingDots />
@@ -91,7 +95,7 @@ export default function NavigationArrows({ currentPokemonId }) {
         </LeftArrowWrapper>
         <RightArrowWrapper>
           <RightArrow
-            onClick={() => handleClick(adjacentPokemonsData.nextPokemon.name)}
+            onClick={() => handleClick(adjacentPokemonsData?.nextPokemon.name)}
           >
             {isAdjacentPokemonsDataLoading ? (
               <LoadingDots />
@@ -111,8 +115,6 @@ export default function NavigationArrows({ currentPokemonId }) {
     )
   );
 }
-
-const mainAccentColor = "#282c34";
 
 const NavigationArrowsWrapper = styled.div`
   position: absolute;

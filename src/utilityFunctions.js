@@ -1,15 +1,7 @@
-export function findObjectValue(object, key, value) {
-  let arr = [];
-
-  for (const item of Object.values(object)) {
-    if (value === undefined) {
-      arr.push(item[key]);
-    } else {
-      arr.push(item[key][value]);
-    }
-  }
-
-  return arr;
+export function findValue(array, key1, key2) {
+  return key2
+    ? array.map((item) => item[key1][key2])
+    : array.map((item) => item[key1]);
 }
 
 export function capitalizeFirstLetter(text) {
@@ -17,16 +9,8 @@ export function capitalizeFirstLetter(text) {
 }
 
 export function formatId(id) {
-  if (id.length > 4) {
-    return `${id}`;
-  } else {
-    const str = `000${id}`;
-    return str.slice(-4);
-  }
-}
-
-export function formatName(name) {
-  return name.toUpperCase();
+  const str = `000${id}`;
+  return id.length === 5 ? str.slice(-5) : str.slice(-4);
 }
 
 export function removeDuplicate(arr) {

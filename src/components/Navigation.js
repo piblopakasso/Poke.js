@@ -3,34 +3,29 @@ import styled from "styled-components";
 
 import SearchBar from "./SearchBar";
 import { NavLink } from "react-router-dom";
+import { mainAccentColor } from "../appColors";
 
-function Navigation() {
+export default function Navigation() {
   return (
-    <>
-      <Header>
-        <HeaderContentWrapper>
-          <NavigationWrapper>
-            <NavigationPage $backgroundColor={"#8fbc8f"} to="/">
-              <span>Home</span>
-            </NavigationPage>
-            <NavigationPage $backgroundColor={"#ff4c4c"} to="/pokedex">
-              <span>Pokedex</span>
-            </NavigationPage>
-            <NavigationPage $backgroundColor={"#2fadd3"} to="/catalog">
-              <span>Catalog</span>
-            </NavigationPage>
-          </NavigationWrapper>
+    <Header>
+      <HeaderContentWrapper>
+        <NavigationWrapper>
+          <NavigationPage $backgroundColor={"#8fbc8f"} to="/">
+            Home
+          </NavigationPage>
+          <NavigationPage $backgroundColor={"#ff4c4c"} to="/pokedex">
+            Pokedex
+          </NavigationPage>
+          <NavigationPage $backgroundColor={"#2fadd3"} to="/catalog">
+            Catalog
+          </NavigationPage>
+        </NavigationWrapper>
 
-          <SearchBar />
-        </HeaderContentWrapper>
-      </Header>
-    </>
+        <SearchBar />
+      </HeaderContentWrapper>
+    </Header>
   );
 }
-
-export default Navigation;
-
-const mainAccentColor = "#282c34";
 
 const Header = styled.div`
   background-color: ${mainAccentColor};

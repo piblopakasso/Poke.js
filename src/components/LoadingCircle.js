@@ -2,11 +2,9 @@ import styled, { keyframes } from "styled-components";
 
 export default function LoadingCircle() {
   return (
-    <>
-      <AnimationWrapper>
-        <AnimatedCircle />
-      </AnimationWrapper>
-    </>
+    <AnimationWrapper>
+      <AnimatedCircle />
+    </AnimationWrapper>
   );
 }
 

@@ -3,8 +3,22 @@ import { useQuery } from "@tanstack/react-query";
 
 import { getAbilityData } from "../fetchFunctions";
 import { capitalizeFirstLetter } from "../utilityFunctions";
+import { mainAccentColor } from "../appColors";
 import LoadingDots from "../components/LoadingDots";
 import styled from "styled-components";
+
+function findAbilityDescription(object, name) {
+  const abilityData = object.effect_entries.find(
+    (element) => element.language.name === "en"
+  );
+
+  return {
+    name: capitalizeFirstLetter(name),
+    description: abilityData
+      ? abilityData.effect
+      : "The ability investigation is still in progress.",
+  };
+}
 
 export default function PokemonAbility({ abilityName, hideDescription }) {
   const {
@@ -12,30 +26,12 @@ export default function PokemonAbility({ abilityName, hideDescription }) {
     isLoading,
     isError,
   } = useQuery({
-    queryFn: async function createPokemonAbilityCard() {
+    queryFn: async function () {
       const ability = await getAbilityData(abilityName);
-      return findAbilityDescription(ability);
+      return findAbilityDescription(ability, abilityName);
     },
     queryKey: ["pokemonAbility", abilityName],
   });
-
-  function findAbilityDescription(object) {
-    let abilityInfo = {
-      name: capitalizeFirstLetter(abilityName),
-      description: "The ability investigation is still in progress.", //default value
-    };
-
-    for (let key of object.effect_entries) {
-      if (key.language.name === "en") {
-        abilityInfo = {
-          name: capitalizeFirstLetter(abilityName),
-          description: key.effect,
-        };
-        break;
-      }
-    }
-    return abilityInfo;
-  }
 
   return (
     <AbilityDescriptionWrapper onClick={hideDescription}>
@@ -53,8 +49,6 @@ export default function PokemonAbility({ abilityName, hideDescription }) {
     </AbilityDescriptionWrapper>
   );
 }
-
-const mainAccentColor = "#282c34";
 
 const AbilityDescriptionWrapper = styled.div`
   margin-top: 10px;
