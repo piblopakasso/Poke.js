@@ -25,8 +25,12 @@ async function getPokemonsOfType(type) {
   return data.pokemon.map((item) => item.pokemon.name);
 }
 
+const initialCatalogItems = 12;
+const formIdLength = 5;
+
 export default function Catalog() {
-  const [catalogItemsCount, setCatalogItemsCount] = useState(12);
+  const [catalogItemsCount, setCatalogItemsCount] =
+    useState(initialCatalogItems);
   const [searchParams] = useSearchParams({
     option: "name",
     query: "",
@@ -77,23 +81,21 @@ export default function Catalog() {
   });
 
   useEffect(() => {
-    setCatalogItemsCount(12);
+    setCatalogItemsCount(initialCatalogItems);
   }, [searchQuery]);
 
   function showMorePokemons() {
-    if (catalogItemsCount < pokemonList.length) {
-      setCatalogItemsCount(catalogItemsCount + 12);
-    } else {
-      setCatalogItemsCount(pokemonList.length);
-    }
+    catalogItemsCount < pokemonList.length
+      ? setCatalogItemsCount(catalogItemsCount + initialCatalogItems)
+      : setCatalogItemsCount(pokemonList.length);
   }
 
   function handleClick(name, form, id) {
-    if (name === form || id.length < 5) {
-      navigate(`/pokedex/${name.toLowerCase()}`);
-    } else {
-      navigate(`/pokedex/${name.toLowerCase()}?form=${form.toLowerCase()}`);
-    }
+    const formSearchParam = form ? `?form=${form.toLowerCase()}` : "";
+
+    name === form || id.length < formIdLength
+      ? navigate(`/pokedex/${name.toLowerCase()}`)
+      : navigate(`/pokedex/${name.toLowerCase()}${formSearchParam}`);
   }
 
   if (isCatalogLoading) {
@@ -205,11 +207,6 @@ const PokemonPreviewImageWrapper = styled.div`
 
 const PokemonPreviewImage = styled.img`
   border-radius: 50%;
-`;
-
-const PokemonPreviewID = styled.div`
-  color: white;
-  font-weight: bold;
 `;
 
 const PokemonPreviewName = styled.div`

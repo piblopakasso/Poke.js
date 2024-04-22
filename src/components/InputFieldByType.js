@@ -31,7 +31,7 @@ export default function InputFieldByType({ selectedType, setSelectedType }) {
   const pokemonTypeSelect = useRef(null);
 
   function togglePokemonTypeSelect() {
-    dropListShown ? setDropListShown(false) : setDropListShown(true);
+    setDropListShown((dropListShown) => !dropListShown);
   }
 
   function hidePokemonTypeSelect() {

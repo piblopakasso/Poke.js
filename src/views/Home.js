@@ -11,11 +11,11 @@ export default function Home() {
           <ParagraphTitle>What is this?</ParagraphTitle>
 
           <ParagraphText>
-            This is a little project that I decided to make from scratch to show
-            and prove (at least to myself) that I can create something. It is
-            far from perfection, however, I am glad that I have evolved (pokemon
-            reference) in something more viable than just another guy that
-            finished 2-days online courses.
+            This is a little project that I decided to make from scratch to try
+            something relatively complex and prove (at least to myself) that I
+            can create stuff. It is far from perfection and there are still a
+            lot of things that can be implemented, however, I am glad that it
+            exist and can demonstrate some of my skills or my potential.
           </ParagraphText>
         </ParagraphWrapper>
 
@@ -23,17 +23,24 @@ export default function Home() {
           <ParagraphTitle>Why Pokemons?</ParagraphTitle>
 
           <ParagraphText>
-            Surprisingly the PokeApi showed itself as a well designed,
-            understandable and fun to work with API. In addition to that, Not
-            surprisingly at all, pokemons are adorable. I really enjoyed
-            developing this lil project.
+            It started from a joke and the joke got out of control. Surprisingly
+            it did not go so bad and, on my thought, it is always better to have
+            some additional fun in a project that is supported only by your
+            self-motivation (unfortunately Nintendo did not paid me anything).
+            PokeAPI showed itself as understandable and easy to work with API.
+            At the same time, it has it cons and limitations resulting in the
+            problem solving situations.
           </ParagraphText>
         </ParagraphWrapper>
 
         <ParagraphWrapper>
           <ParagraphTitle>What was used?</ParagraphTitle>
 
-          <ParagraphText>Piu pau Bla bla Shimba bumba</ParagraphText>
+          <ParagraphText></ParagraphText>
+          <ul>
+            At this stage of the project there were used:
+            <li>My imagination</li>
+          </ul>
         </ParagraphWrapper>
       </ContentWrapper>
     </HomeWrapper>
@@ -58,10 +65,12 @@ const MainTitle = styled.h3`
 const ContentWrapper = styled.div`
   background-color: #dcdcdc;
   border-radius: 12px;
-  padding: 30px 30px 20px 30px;
+  padding: 30px 30px 0 30px;
 `;
 
-const ParagraphWrapper = styled.div``;
+const ParagraphWrapper = styled.div`
+  margin-bottom: 30px;
+`;
 
 const ParagraphTitle = styled.h4`
   display: inline-block;
@@ -69,9 +78,9 @@ const ParagraphTitle = styled.h4`
   background-color: #8d9d9f;
   border-radius: 5px;
   padding: 5px;
+  margin-bottom: 10px;
 `;
 
 const ParagraphText = styled.p`
-  margin: 10px 0 30px;
   color: #282c34;
 `;

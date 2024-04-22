@@ -27,7 +27,7 @@ export default function InputFieldByName({
   const suggestedListSelect = useRef(null);
 
   function toggleSuggestedList(value) {
-    value === "" ? setSuggestedListShown(false) : setSuggestedListShown(true);
+    setSuggestedListShown(value !== "");
   }
 
   function hideSuggestedList() {

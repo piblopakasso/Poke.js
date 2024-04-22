@@ -7,8 +7,7 @@ import { getPokemonFormData, getPokemonList } from "../fetchFunctions";
 import { formatPokemonListData } from "../utilityFunctions";
 import ErrorPage from "./ErrorPage";
 
-function selectRandomPokemonId(data) {
-  const pokemonIds = data.ids;
+function selectRandomId(pokemonIds) {
   const randomIndex = Math.floor(Math.random() * pokemonIds.length);
 
   return pokemonIds[randomIndex];
@@ -28,7 +27,7 @@ export default function PokedexInitialView() {
   const { refetch: refetchDefaultForm } = useQuery({
     queryFn: async function () {
       const formData = await getPokemonFormData(
-        selectRandomPokemonId(allPokemons)
+        selectRandomId(allPokemons.ids)
       );
 
       return formData.species.name;

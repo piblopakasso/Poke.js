@@ -36,9 +36,7 @@ export default function SearchBar() {
   });
 
   function toggleSearchOptionSelect() {
-    searchOptionsShown
-      ? setSearchOptionsShown(false)
-      : setSearchOptionsShown(true);
+    setSearchOptionsShown((searchOptionsShown) => !searchOptionsShown);
   }
 
   function hideSearchOptionSelect() {
@@ -55,11 +53,9 @@ export default function SearchBar() {
     const numberOfSpecies = allPokemons.ids.length;
     const validQuery = await refetchDefaultForm();
 
-    if (queryIndex > numberOfSpecies) {
-      navigate(`/pokedex/${validQuery.data}?form=${query}`);
-    } else {
-      navigate(`/pokedex/${validQuery.data}`);
-    }
+    queryIndex > numberOfSpecies
+      ? navigate(`/pokedex/${validQuery.data}?form=${query}`)
+      : navigate(`/pokedex/${validQuery.data}`);
   } //this function checks if the pokemon name (ex: venusaur) or the pokemon form name (ex: venusaur-mega) was searched and according to result transfer to the necessary page
 
   async function handleSubmit() {

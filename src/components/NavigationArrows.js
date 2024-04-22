@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -18,6 +18,9 @@ export default function NavigationArrows({ currentPokemonId }) {
     queryKey: ["allPokemons"],
   });
 
+  const firstPokemonId = 1;
+  const lastPokemonId = allPokemons.ids.length;
+
   const {
     data: adjacentPokemonsData,
     isError: isAdjacentPokemonsDataError,
@@ -25,7 +28,7 @@ export default function NavigationArrows({ currentPokemonId }) {
     isSuccess,
   } = useQuery({
     queryFn: async function () {
-      const adjacentPokemons = findAdjucentPokemons();
+      const adjacentPokemons = findAdjacentPokemons();
       const promises = adjacentPokemons.map(getPokemonFormData);
       const [previous, next] = await Promise.all(promises);
 
@@ -43,7 +46,7 @@ export default function NavigationArrows({ currentPokemonId }) {
     queryKey: ["previews", currentPokemonId],
   });
 
-  function findAdjucentPokemons() {
+  function findAdjacentPokemons() {
     const previousPokemonId = findPrevPokemon();
     const nextPokemonId = findNextPokemon();
 
@@ -51,25 +54,19 @@ export default function NavigationArrows({ currentPokemonId }) {
   }
 
   function findPrevPokemon() {
-    if (parseInt(currentPokemonId) === 1) {
-      return allPokemons.ids.length;
-    } else {
-      return parseInt(currentPokemonId) - 1;
-    }
+    return parseInt(currentPokemonId) === firstPokemonId
+      ? lastPokemonId
+      : parseInt(currentPokemonId) - 1;
   }
 
   function findNextPokemon() {
-    if (parseInt(currentPokemonId) === allPokemons.ids.length) {
-      return 1;
-    } else {
-      return parseInt(currentPokemonId) + 1;
-    }
+    return parseInt(currentPokemonId) === lastPokemonId
+      ? firstPokemonId
+      : parseInt(currentPokemonId) + 1;
   }
 
   function handleClick(name) {
-    if (isSuccess) {
-      navigate(`/pokedex/${name.toLowerCase()}`);
-    }
+    isSuccess && navigate(`/pokedex/${name.toLowerCase()}`);
   }
 
   return (

@@ -105,13 +105,10 @@ export default function Pokedex() {
 
   function flipImage() {
     const pokemon = pokemonData.forms[selectedForm];
-    if (pokemon.imageBack === null) {
-      setPokemonImage(pokemon.imageFront);
-    } else if (pokemonImage === pokemon.imageFront) {
-      setPokemonImage(pokemon.imageBack);
-    } else {
-      setPokemonImage(pokemon.imageFront);
-    }
+
+    pokemonImage !== pokemon.imageFront || pokemon.imageBack === null
+      ? setPokemonImage(pokemon.imageFront)
+      : setPokemonImage(pokemon.imageBack);
   }
 
   function changePokemonForm(e) {
@@ -119,26 +116,21 @@ export default function Pokedex() {
     if (form === query || form === pokemonData.defaultForm) {
       setSearchParams();
     } else {
-      setSearchParams({ form: form });
+      setSearchParams({ form });
     }
     setSelectedForm(form);
   }
 
   function handleFormChange() {
     const form = searchParams.get("form");
-    if (form !== null) {
-      setSelectedForm(form);
-    } else {
-      setSelectedForm(pokemonData.defaultForm);
-    }
+
+    form !== null
+      ? setSelectedForm(form)
+      : setSelectedForm(pokemonData.defaultForm);
   }
 
   function togglePokemonForms() {
-    if (formsListShown === true) {
-      setFormsListShown(false);
-    } else {
-      setFormsListShown(true);
-    }
+    setFormsListShown((formsListShown) => !formsListShown);
   }
 
   function hideAbilityDescription() {
@@ -165,11 +157,12 @@ export default function Pokedex() {
     return <ErrorPage />;
   }
 
+  const currentForm = pokemonData.forms[selectedForm];
+  const mainTypeColor = colors[currentForm?.types[0]];
+
   return (
     <>
-      <IdWrapper
-        $backgroundColor={colors[pokemonData.forms[selectedForm]?.types[0]]}
-      >
+      <IdWrapper $backgroundColor={mainTypeColor}>
         <NavigationArrows currentPokemonId={pokemonData.id} />
         <PokemonId>#{pokemonData.id}</PokemonId>
       </IdWrapper>
@@ -195,7 +188,7 @@ export default function Pokedex() {
                 <PokemonForm
                   key={index}
                   onClick={changePokemonForm}
-                  $color={colors[pokemonData.forms[selectedForm]?.types[0]]}
+                  $color={mainTypeColor}
                 >
                   {capitalizeFirstLetter(text)}
                 </PokemonForm>
@@ -204,44 +197,30 @@ export default function Pokedex() {
           </PokemonFormsWrapper>
         )}
 
-        <GeneralInfo
-          $backgroundColor={colors[pokemonData.forms[selectedForm]?.types[0]]}
-        >
+        <GeneralInfo $backgroundColor={mainTypeColor}>
           <DescriptionWrapper>
             Description
-            <PokemonDescription
-              $backgroundColor={
-                colors[pokemonData.forms[selectedForm]?.types[0]]
-              }
-            >
+            <PokemonDescription $backgroundColor={mainTypeColor}>
               {pokemonData.description}
             </PokemonDescription>
           </DescriptionWrapper>
           <HeightWrapper>
             Height
-            <PokemonHeight
-              $backgroundColor={
-                colors[pokemonData.forms[selectedForm]?.types[0]]
-              }
-            >
-              {pokemonData.forms[selectedForm]?.height / 10} m
+            <PokemonHeight $backgroundColor={mainTypeColor}>
+              {currentForm?.height / 10} m
             </PokemonHeight>
           </HeightWrapper>
           <WeightWrapper>
             Weight
-            <PokemonWeight
-              $backgroundColor={
-                colors[pokemonData.forms[selectedForm]?.types[0]]
-              }
-            >
-              {pokemonData.forms[selectedForm]?.weight / 10} kg
+            <PokemonWeight $backgroundColor={mainTypeColor}>
+              {currentForm?.weight / 10} kg
             </PokemonWeight>
           </WeightWrapper>
         </GeneralInfo>
 
         <TypesWrapper>
           <h4>Types</h4>
-          {pokemonData.forms[selectedForm]?.types.map((text, index) => (
+          {currentForm?.types.map((text, index) => (
             <PokemonTypes $backgroundColor={colors[text]} key={index}>
               {capitalizeFirstLetter(text)}
             </PokemonTypes>
@@ -250,7 +229,7 @@ export default function Pokedex() {
 
         <AbilitiesWrapper>
           <h4>Abilities</h4>
-          {pokemonData.forms[selectedForm]?.abilities.map((text, index) => (
+          {currentForm?.abilities.map((text, index) => (
             <PokemonAbilities
               $touched={abilityDescription.shown}
               key={index}
@@ -270,12 +249,10 @@ export default function Pokedex() {
         <StatsWrapper>
           Stats
           <StatColumnsWrapper>
-            {pokemonData.forms[selectedForm]?.stats.map((item, index) => (
+            {currentForm?.stats.map((item, index) => (
               <StatColumnWrapper key={index}>
                 <StatColumn
-                  $backgroundColor={
-                    colors[pokemonData.forms[selectedForm]?.types[0]]
-                  }
+                  $backgroundColor={mainTypeColor}
                   $height={`${item / 2.5}%`}
                 />
               </StatColumnWrapper>
