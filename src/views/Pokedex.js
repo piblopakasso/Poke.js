@@ -57,7 +57,6 @@ function findPokemonDescription(arr) {
 export default function Pokedex() {
   const { query } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [selectedForm, setSelectedForm] = useState(query);
   const [pokemonImage, setPokemonImage] = useState();
   const [formsListShown, setFormsListShown] = useState(false);
   const [abilityDescription, setAbilityDescription] = useState({
@@ -86,11 +85,14 @@ export default function Pokedex() {
     queryKey: ["pokemonData", { query }],
   });
 
+  const selectedForm = searchParams.get("form")
+    ? searchParams.get("form")
+    : pokemonData?.defaultForm;
+
   useEffect(() => {
     if (isSuccess) {
       resetModals();
-      handleFormChange();
-      setPokemonImage(pokemonData.forms[selectedForm]?.imageFront);
+      setPokemonImage(pokemonData.forms[selectedForm].imageFront);
     }
   }, [isSuccess, pokemonData, selectedForm]);
 
@@ -113,20 +115,10 @@ export default function Pokedex() {
 
   function changePokemonForm(e) {
     const form = e.target.textContent.toLowerCase();
-    if (form === query || form === pokemonData.defaultForm) {
-      setSearchParams();
-    } else {
-      setSearchParams({ form });
-    }
-    setSelectedForm(form);
-  }
 
-  function handleFormChange() {
-    const form = searchParams.get("form");
-
-    form !== null
-      ? setSelectedForm(form)
-      : setSelectedForm(pokemonData.defaultForm);
+    form === query || form === pokemonData.defaultForm
+      ? setSearchParams()
+      : setSearchParams({ form });
   }
 
   function togglePokemonForms() {
@@ -157,8 +149,8 @@ export default function Pokedex() {
     return <ErrorPage />;
   }
 
-  const currentForm = pokemonData.forms[selectedForm];
-  const mainTypeColor = colors[currentForm?.types[0]];
+  const selectedFormData = pokemonData.forms[selectedForm];
+  const mainTypeColor = colors[selectedFormData.types[0]];
 
   return (
     <>
@@ -207,20 +199,20 @@ export default function Pokedex() {
           <HeightWrapper>
             Height
             <PokemonHeight $backgroundColor={mainTypeColor}>
-              {currentForm?.height / 10} m
+              {selectedFormData.height / 10} m
             </PokemonHeight>
           </HeightWrapper>
           <WeightWrapper>
             Weight
             <PokemonWeight $backgroundColor={mainTypeColor}>
-              {currentForm?.weight / 10} kg
+              {selectedFormData.weight / 10} kg
             </PokemonWeight>
           </WeightWrapper>
         </GeneralInfo>
 
         <TypesWrapper>
           <h4>Types</h4>
-          {currentForm?.types.map((text, index) => (
+          {selectedFormData.types.map((text, index) => (
             <PokemonTypes $backgroundColor={colors[text]} key={index}>
               {capitalizeFirstLetter(text)}
             </PokemonTypes>
@@ -229,7 +221,7 @@ export default function Pokedex() {
 
         <AbilitiesWrapper>
           <h4>Abilities</h4>
-          {currentForm?.abilities.map((text, index) => (
+          {selectedFormData.abilities.map((text, index) => (
             <PokemonAbilities
               $touched={abilityDescription.shown}
               key={index}
@@ -249,7 +241,7 @@ export default function Pokedex() {
         <StatsWrapper>
           Stats
           <StatColumnsWrapper>
-            {currentForm?.stats.map((item, index) => (
+            {selectedFormData.stats.map((item, index) => (
               <StatColumnWrapper key={index}>
                 <StatColumn
                   $backgroundColor={mainTypeColor}
