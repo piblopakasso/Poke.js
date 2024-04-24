@@ -16,6 +16,24 @@ function checkPattern(value) {
   return pattern.test(value);
 }
 
+function highlightMatch(item, value) {
+  const index = item.indexOf(value.toLowerCase());
+
+  const before = item.substring(0, index);
+  const match = item.substring(index, index + value.length);
+  const after = item.substring(index + value.length);
+
+  return (
+    <span>
+      {before && capitalizeFirstLetter(before)}
+      <Match>{!before ? capitalizeFirstLetter(match) : match}</Match>
+      {after}
+    </span>
+  );
+}
+
+const itemsInSuggestedList = 12;
+
 export default function InputFieldByName({
   pokemonList,
   inputValue,
@@ -36,7 +54,7 @@ export default function InputFieldByName({
 
   function handleInputChange(e) {
     const value = translateIdToText(e.target.value, pokemonList);
-    const list = sortItems(findSimilarItems(value, pokemonList));
+    const list = sortItems(findSimilarItems(value, pokemonList.names));
 
     if (checkPattern(e.target.value) || e.target.value === "") {
       setInputValue(e.target.value);
@@ -45,9 +63,7 @@ export default function InputFieldByName({
     setSuggestedList(list);
   }
 
-  function substituteInputValue(e) {
-    const text = e.target.textContent;
-
+  function substituteInputValue(text) {
     setInputValue(text);
     setSuggestedList([text.toLowerCase()]);
     hideSuggestedList();
@@ -68,9 +84,12 @@ export default function InputFieldByName({
           {suggestedList.length === 0 ? (
             <NotFoundMessage>Pokemon not found</NotFoundMessage>
           ) : (
-            suggestedList.slice(0, 6).map((item, index) => (
-              <DropListOption key={index} onClick={substituteInputValue}>
-                {capitalizeFirstLetter(item)}
+            suggestedList.slice(0, itemsInSuggestedList).map((item, index) => (
+              <DropListOption
+                key={index}
+                onClick={() => substituteInputValue(item)}
+              >
+                {highlightMatch(item, inputValue)}
               </DropListOption>
             ))
           )}
@@ -125,4 +144,9 @@ const NotFoundMessage = styled.div`
   font-size: 14px;
   cursor: default;
   color: gray;
+`;
+
+const Match = styled.span`
+  font-weight: bold;
+  color: #2fadd3;
 `;

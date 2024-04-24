@@ -47,7 +47,7 @@ export default function Catalog() {
       } else if (searchOption === "name" && searchQuery !== "") {
         const list = await getPokemonList();
         const formattedData = formatPokemonListData(list);
-        return findSimilarItems(searchQuery, formattedData);
+        return findSimilarItems(searchQuery, formattedData.names);
       } else if (searchOption === "type") {
         return await getPokemonsOfType(searchQuery);
       }

@@ -47,6 +47,6 @@ export function translateIdToText(value, object) {
   }
 }
 
-export function findSimilarItems(value, object) {
-  return object.names.filter((name) => name.includes(value.toLowerCase()));
+export function findSimilarItems(value, arr) {
+  return arr.filter((name) => name.includes(value.toLowerCase()));
 }
