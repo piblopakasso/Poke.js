@@ -108,7 +108,6 @@ export default function Catalog() {
 
   return (
     <PokemonCatalogWrapper>
-      <SortButton>Sort</SortButton>
       <PokemonCatalog>
         {pokemonCatalog?.map((content, index) => (
           <PokemonPreview
@@ -155,25 +154,10 @@ const PokemonCatalogWrapper = styled.div`
   margin: 0 auto;
 `;
 
-const SortButton = styled.button`
-  width: max-content;
-  padding: 5px 5px 5px 7px;
-  margin: 20px 0 10px 10px;
-  border-radius: 8px;
-  cursor: pointer;
-  border: solid gainsboro 1px;
-
-  &:after {
-    content: "\\25BC";
-    color: gray;
-    margin-left: 15px;
-    font-size: 12px;
-  }
-`;
-
 const PokemonCatalog = styled.div`
   display: flex;
   flex-wrap: wrap;
+  margin-top: 40px;
 `;
 
 const PokemonPreview = styled.div`
