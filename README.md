@@ -42,7 +42,55 @@ it was not necessary to search anything else. As a result, I believe it was a su
     To format all the written code to meet nice-looking standards.
 
 
-(Probably, the next parts of this file won`t be very useful for anybody, still they look nice, so I decided to keep them) :wink:
+## Features
+
+I believe it is also crucial to add some information about the implemented features in the project.
+
+I can divide the project into three main parts. Considering that they require some knowledge
+of the Pokémon universe, I'll do my best to describe each part briefly and comprehensibly. :wink:
+
+### Pokedex
+
+In the Pokémon universe, the Pokédex serves as the primary source for detailed information about Pokémon species.
+My page functions similarly, but with additional features:
+
+- Detailed description of the specie;
+- Front and back variants of species images (poke the picture to flip it ("poke" got it? :smiley:));
+- Ability to select different forms of a species, if applicable
+  (some pokémon have multiple forms, each with its own parameters/types/abilities);;
+- Animated changes of parameters when switching species/forms;
+- Page styles adapt based on the primary type of the specie;
+- Navigation arrows added for easy selection of the next or previous species.
+
+### Catalog
+
+This page contains a collection of Pokémon species that you might be interested in:
+
+- Previews of species with general info about each;
+- Each preview is automatically styled according to the primary Pokémon type;
+- Clicking on a preview will direct you to the corresponding Pokedex page
+(this applies to specific forms of Pokémon as well);
+- Custom infinite scroll to enhance the number of Pokémon species previews.
+
+### Search Bar
+
+Due to limitation in the PokeAPI, it was necessary to develop fully custom search system. 
+The search results of which depend on the chosen parameters and even the shown list of suggestions. 
+
+- Two options for search: "by name" and "by type";
+
+  By Name:
+
+    - Auto-suggestion of potential search options;
+    - Highlighting of the searched words/letters in the suggestions list;
+    - Submitting a search request will lead to a different page based on the precision of your query 
+  (This means that an exact match with the specie/form name will lead directly to its Pokedex page.
+  In case of multiple suggestions for your query, you will be redirected to the Catalog page with the full 
+  collection of suggested pokémon. :sweat_smile:).
+
+  By Type:
+
+    - Select your preferred type from the dropdown list to view all Pokémon of that type on the Catalog page.
 
 ## Installation
 
@@ -57,14 +105,14 @@ npm install
 
 ### Development mode
 ```shell
-$ npm start
+npm start
 
 ...
 ```
 
 ### Production mode
 ```shell
-$ npm run build
+npm run build
 
 ...
 ```
