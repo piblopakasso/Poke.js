@@ -87,6 +87,7 @@ const TypeSelectButton = styled.div`
   border-radius: 8px;
   width: 200px;
   background-color: white;
+  line-height: 1;
 
   &:after {
     content: "\\25BC";

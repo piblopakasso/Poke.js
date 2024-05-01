@@ -5,7 +5,7 @@
 
 Hi! :hand:
 
-This is a relatively small home project the main idea of which was to develop my skills in React and widely used
+This is my home project the main idea of which was to develop my skills in React and widely used
 technologies at the same time in programming overall. I thought that it would be interesting to base the project on
 something fun and adorable. Once I found out that there exists a website/API that suits me, and it is about Pokémon,
 it was not necessary to search anything else. As a result, I believe it was a successful choice. :relaxed:  

@@ -35,6 +35,7 @@ export default App;
 const StyledApp = styled.div`
   font-family: "Roboto", sans-serif;
   background-color: whitesmoke;
-  min-height: 100vh;
   color: #282c34;
+  min-height: 100vh;
+  overflow: visible;
 `;
