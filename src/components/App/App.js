@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import { Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import Home from "../../views/Home";
@@ -16,16 +16,18 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <StyledApp>
-        <Navigation />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/pokedex" element={<PokedexInitialView />} />
-          <Route path="/pokedex/:query" element={<Pokedex />} />
-          <Route path="/catalog" element={<Catalog />} />
-          <Route path="*" element={<PageNotFound />} />
-        </Routes>
-      </StyledApp>
+      <BrowserRouter>
+        <StyledApp>
+          <Navigation />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/pokedex" element={<PokedexInitialView />} />
+            <Route path="/pokedex/:query" element={<Pokedex />} />
+            <Route path="/catalog" element={<Catalog />} />
+            <Route path="*" element={<PageNotFound />} />
+          </Routes>
+        </StyledApp>
+      </BrowserRouter>
     </QueryClientProvider>
   );
 }
