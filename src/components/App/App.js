@@ -8,7 +8,6 @@ import Home from "../../views/Home";
 import Pokedex from "../../views/Pokedex";
 import Catalog from "../../views/Catalog";
 import Navigation from "../Navigation";
-import PokedexInitialView from "../../views/PokedexInitialView";
 import PageNotFound from "../../views/PageNotFound";
 
 const queryClient = new QueryClient();
@@ -21,7 +20,6 @@ function App() {
           <Navigation />
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/pokedex" element={<PokedexInitialView />} />
             <Route path="/pokedex/:query" element={<Pokedex />} />
             <Route path="/catalog" element={<Catalog />} />
             <Route path="*" element={<PageNotFound />} />

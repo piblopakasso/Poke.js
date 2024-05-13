@@ -13,7 +13,7 @@ export default function Navigation() {
           <NavigationPage $backgroundColor={"#8fbc8f"} to="/">
             Home
           </NavigationPage>
-          <NavigationPage $backgroundColor={"#ff4c4c"} to="/pokedex">
+          <NavigationPage $backgroundColor={"#ff4c4c"} to="/pokedex/bulbasaur">
             Pokedex
           </NavigationPage>
           <NavigationPage $backgroundColor={"#2fadd3"} to="/catalog">
