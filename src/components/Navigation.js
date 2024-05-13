@@ -5,6 +5,8 @@ import SearchBar from "./SearchBar";
 import { NavLink } from "react-router-dom";
 import { mainAccentColor } from "../appColors";
 
+const defaultPokemon = "bulbasaur";
+
 export default function Navigation() {
   return (
     <Header>
@@ -13,7 +15,10 @@ export default function Navigation() {
           <NavigationPage $backgroundColor={"#8fbc8f"} to="/">
             Home
           </NavigationPage>
-          <NavigationPage $backgroundColor={"#ff4c4c"} to="/pokedex/bulbasaur">
+          <NavigationPage
+            $backgroundColor={"#ff4c4c"}
+            to={`/pokedex?specie=${defaultPokemon}`}
+          >
             Pokedex
           </NavigationPage>
           <NavigationPage $backgroundColor={"#2fadd3"} to="/catalog">

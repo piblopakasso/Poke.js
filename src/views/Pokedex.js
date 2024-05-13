@@ -19,7 +19,7 @@ import PokemonAbility from "../components/PokemonAbility";
 import LoadingCircle from "../components/LoadingCircle";
 import ErrorPage from "./ErrorPage";
 import NavigationArrows from "../components/NavigationArrows";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 async function getPokemonFormsData(arr) {
   const promises = arr.map((item) => getPokemonFormData(item.pokemon.name));
@@ -55,8 +55,8 @@ function findPokemonDescription(arr) {
 }
 
 export default function Pokedex() {
-  const { query } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
+  const searchSpecie = searchParams.get("specie");
   const [pokemonImage, setPokemonImage] = useState();
   const [formsListShown, setFormsListShown] = useState(false);
   const [abilityDescription, setAbilityDescription] = useState({
@@ -71,7 +71,7 @@ export default function Pokedex() {
     isSuccess,
   } = useQuery({
     queryFn: async function () {
-      const specie = await getPokemonSpecieData(query);
+      const specie = await getPokemonSpecieData(searchSpecie);
       const forms = await getPokemonFormsData(specie.varieties);
 
       return {
@@ -82,7 +82,7 @@ export default function Pokedex() {
         forms: forms,
       };
     },
-    queryKey: ["pokemonData", { query }],
+    queryKey: ["pokemonData", { searchSpecie }],
   });
 
   const selectedForm = searchParams.get("form")
@@ -116,9 +116,9 @@ export default function Pokedex() {
   function changePokemonForm(e) {
     const form = e.target.textContent.toLowerCase();
 
-    form === query || form === pokemonData.defaultForm
-      ? setSearchParams()
-      : setSearchParams({ form });
+    form === searchSpecie || form === pokemonData.defaultForm
+      ? setSearchParams({ specie: searchSpecie })
+      : setSearchParams({ specie: searchSpecie, form });
   }
 
   function togglePokemonForms() {

@@ -94,8 +94,8 @@ export default function Catalog() {
     const formSearchParam = form ? `?form=${form.toLowerCase()}` : "";
 
     name === form || id.length < formIdLength
-      ? navigate(`/pokedex/${name.toLowerCase()}`)
-      : navigate(`/pokedex/${name.toLowerCase()}${formSearchParam}`);
+      ? navigate(`/pokedex?specie=${name.toLowerCase()}`)
+      : navigate(`/pokedex?specie=${name.toLowerCase()}${formSearchParam}`);
   }
 
   if (isCatalogLoading) {

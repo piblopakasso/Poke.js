@@ -32,7 +32,7 @@ export default function SearchBar() {
       return formData.species.name;
     },
     queryKey: ["defaultForm"],
-    enabled: false, //pokemons can have different forms based on their actual name (ex: venusaur-mega), this function gets the pokemon's actual pokemon name
+    enabled: false,
   });
 
   function toggleSearchOptionSelect() {
@@ -54,9 +54,9 @@ export default function SearchBar() {
     const validQuery = await refetchDefaultForm();
 
     queryIndex > numberOfSpecies
-      ? navigate(`/pokedex/${validQuery.data}?form=${query}`)
-      : navigate(`/pokedex/${validQuery.data}`);
-  } //this function checks if the pokemon name (ex: venusaur) or the pokemon form name (ex: venusaur-mega) was searched and according to result transfer to the necessary page
+      ? navigate(`/pokedex?specie=${validQuery.data}&form=${query}`)
+      : navigate(`/pokedex?specie=${validQuery.data}`);
+  }
 
   async function handleSubmit() {
     const searchVariants = searchResult.length;
@@ -65,7 +65,7 @@ export default function SearchBar() {
       allPokemons
     );
 
-    if (searchOption === "Type" && searchQuery !== "") {
+    if (searchQuery === "") {
       navigate(
         `/catalog?query=${searchQuery.toLowerCase()}&option=${searchOption.toLowerCase()}`
       );

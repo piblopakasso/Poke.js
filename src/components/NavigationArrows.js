@@ -66,7 +66,7 @@ export default function NavigationArrows({ currentPokemonId }) {
   }
 
   function handleClick(name) {
-    isSuccess && navigate(`/pokedex/${name.toLowerCase()}`);
+    isSuccess && navigate(`/pokedex?specie=${name.toLowerCase()}`);
   }
 
   return (

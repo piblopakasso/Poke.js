@@ -20,7 +20,7 @@ function App() {
           <Navigation />
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/pokedex/:query" element={<Pokedex />} />
+            <Route path="/pokedex" element={<Pokedex />} />
             <Route path="/catalog" element={<Catalog />} />
             <Route path="*" element={<PageNotFound />} />
           </Routes>
