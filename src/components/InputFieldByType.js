@@ -74,7 +74,6 @@ export default function InputFieldByType({ selectedType, setSelectedType }) {
 
 const TypeSelectWrapper = styled.div`
   position: relative;
-  margin: 0 10px 0 10px;
 `;
 
 const TypeSelectButton = styled.div`
@@ -82,10 +81,10 @@ const TypeSelectButton = styled.div`
   align-items: center;
   justify-content: space-between;
   box-sizing: border-box;
-  padding: 6px 10px 6px 20px;
+  padding: 6px 10px 6px 15px;
   border: solid gainsboro 1px;
   border-radius: 8px;
-  width: 200px;
+  width: 210px;
   background-color: white;
   line-height: 1;
 
@@ -115,7 +114,7 @@ const TypeSelectButtonText = styled.span`
 
 const TypeSelectDropList = styled.div`
   position: absolute;
-  padding: 3px 10px 3px 20px;
+  padding: 3px 10px 3px 15px;
   border: solid gainsboro 1px;
   border-radius: 8px;
   background-color: ${mainBackgroundColor};

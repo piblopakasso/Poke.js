@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 import {
   capitalizeFirstLetter,
@@ -30,6 +30,12 @@ function highlightMatch(item, value) {
       {after}
     </span>
   );
+}
+
+function selectRandomId(pokemonIds) {
+  const randomIndex = Math.floor(Math.random() * pokemonIds.length);
+
+  return pokemonIds[randomIndex];
 }
 
 const itemsInSuggestedList = 12;
@@ -64,9 +70,14 @@ export default function InputFieldByName({
   }
 
   function substituteInputValue(text) {
-    setInputValue(text);
+    setInputValue(capitalizeFirstLetter(text));
     setSuggestedList([text.toLowerCase()]);
     hideSuggestedList();
+  }
+
+  function handleRandom() {
+    const randomItem = selectRandomId(pokemonList.names);
+    substituteInputValue(randomItem);
   }
 
   useClickOutside(suggestedListSelect, hideSuggestedList);
@@ -95,27 +106,29 @@ export default function InputFieldByName({
           )}
         </SearchInputDropList>
       )}
+      <RandomButton type="button" onClick={handleRandom}>
+        &#127922;
+      </RandomButton>
     </SearchInputWrapper>
   );
 }
 
 const SearchInputWrapper = styled.div`
   position: relative;
-  margin: 0 10px 0 10px;
 `;
 
 const SearchInput = styled.input`
-  padding: 5px 10px 5px 20px;
+  padding: 5px 35px 5px 15px;
   border: solid gainsboro 1px;
   border-radius: 8px;
-  width: 200px;
+  width: 210px;
   box-sizing: border-box;
   font-size: 14px;
 `;
 
 const SearchInputDropList = styled.div`
   position: absolute;
-  padding: 3px 10px 3px 20px;
+  padding: 3px 10px 3px 15px;
   border: solid gainsboro 1px;
   border-radius: 8px;
   background-color: ${mainBackgroundColor};
@@ -149,4 +162,39 @@ const NotFoundMessage = styled.div`
 const Match = styled.span`
   font-weight: bold;
   color: #2fadd3;
+`;
+
+const shake = keyframes`
+  0% {
+    transform: translateX(1px);
+  }
+  25% {
+    transform: translateX(-2px);
+  }
+  50% {
+    transform: translateX(3px);
+  }
+  75% {
+    transform: translateX(-2px);
+  }
+  100% {
+    transform: translateX(1px);
+  }
+`;
+
+const RandomButton = styled.button`
+  position: absolute;
+  top: 16%;
+  right: 0;
+  appearance: none;
+  padding: 0;
+  margin-right: 10px;
+  border: none;
+  background-color: transparent;
+  font-size: 15px;
+  cursor: pointer;
+
+  &:hover {
+    animation: 0.3s linear ${shake};
+  }
 `;

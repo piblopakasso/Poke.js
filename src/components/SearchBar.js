@@ -85,7 +85,7 @@ export default function SearchBar() {
   return (
     <>
       <SearchWrapper>
-        <span>Find your Pokemon!</span>
+        <SearchBarText>Find your Pokemon!</SearchBarText>
         {searchOption === "Name" ? (
           <InputFieldByName
             pokemonList={allPokemons}
@@ -127,8 +127,7 @@ export default function SearchBar() {
 
 const SearchWrapper = styled.div`
   display: flex;
-  justify-content: center;
-  align-content: center;
+  justify-content: space-between;
   align-items: center;
   margin-top: 15px;
   padding: 5px 15px 5px 15px;
@@ -136,9 +135,12 @@ const SearchWrapper = styled.div`
   background-color: ${mainBackgroundColor};
 `;
 
+const SearchBarText = styled.span`
+  font-size: 15px;
+`;
+
 const SearchButton = styled.button`
   padding: 5px 10px 5px 10px;
-  margin-right: 10px;
   border-radius: 8px;
   cursor: pointer;
   border: solid gainsboro 1px;
