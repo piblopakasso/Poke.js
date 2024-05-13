@@ -71,6 +71,7 @@ export default function SearchBar() {
       );
     } else if (searchVariants === 1 && searchOption === "Name") {
       await checkSearchQuery(formattedSearchQuery);
+      setSearchResult([]);
     } else {
       navigate(
         `/catalog?query=${formattedSearchQuery}&option=${searchOption.toLowerCase()}`
