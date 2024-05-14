@@ -27,6 +27,10 @@ module.exports = merge(common, {
           },
         ],
       },
+      {
+        test: /\.(png|svg|jpg|jpeg|gif|webp)$/i,
+        type: "asset/resource",
+      },
     ],
   },
   plugins: [new ReactRefreshWebpackPlugin()],

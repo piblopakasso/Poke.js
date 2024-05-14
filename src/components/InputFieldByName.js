@@ -9,6 +9,7 @@ import {
 } from "../utilityFunctions";
 import { mainBackgroundColor, mainAccentColor } from "../appColors";
 import useClickOutside from "../hooks/useClickOutside";
+import diceicon from "../images/diceicon.webp";
 
 function checkPattern(value) {
   const pattern = /^[a-zA-Z0-9-]+$/;
@@ -106,8 +107,8 @@ export default function InputFieldByName({
           )}
         </SearchInputDropList>
       )}
-      <RandomButton type="button" onClick={handleRandom}>
-        &#127922;
+      <RandomButton onClick={handleRandom}>
+        <Dice src={diceicon} alt="" />
       </RandomButton>
     </SearchInputWrapper>
   );
@@ -164,6 +165,13 @@ const Match = styled.span`
   color: #2fadd3;
 `;
 
+const RandomButton = styled.div`
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin: 6px 10px 0 0;
+`;
+
 const shake = keyframes`
   0% {
     transform: translateX(1px);
@@ -182,19 +190,16 @@ const shake = keyframes`
   }
 `;
 
-const RandomButton = styled.button`
-  position: absolute;
-  top: 16%;
-  right: 0;
-  appearance: none;
-  padding: 0;
-  margin-right: 10px;
-  border: none;
-  background-color: transparent;
-  font-size: 15px;
+const Dice = styled.img`
+  width: 16px;
   cursor: pointer;
+  transition: all linear 0.3s;
 
   &:hover {
-    animation: 0.3s linear ${shake};
+    animation: 0.25s linear ${shake};
+  }
+
+  &:active {
+    transform: rotate(360deg);
   }
 `;
