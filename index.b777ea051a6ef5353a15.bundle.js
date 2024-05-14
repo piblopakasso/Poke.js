@@ -1,4 +1,4 @@
-"use strict";(self.webpackChunkwebpack_react=self.webpackChunkwebpack_react||[]).push([[826],{954:function(e,o,n){var r=n(294),t=n(745),i=n(379),a=n.n(i),s=n(795),d=n.n(s),c=n(569),l=n.n(c),p=n(565),x=n.n(p),u=n(216),g=n.n(u),h=n(589),f=n.n(h),b=n(434),m={};m.styleTagTransform=f(),m.setAttributes=x(),m.insert=l().bind(null,"head"),m.domAPI=d(),m.insertStyleElement=g(),a()(b.Z,m),b.Z&&b.Z.locals&&b.Z.locals;var k=n(763),j=n(655),y=n(250),w=n(965),v=n(202),P=n(893);function A(){return(0,P.jsxs)(C,{children:[(0,P.jsx)($,{children:"About"}),(0,P.jsxs)(Z,{children:[(0,P.jsxs)(I,{children:[(0,P.jsx)(z,{children:"What is this?"}),(0,P.jsx)(B,{children:"This is my home project that I decided to make from scratch to try something relatively complex and prove (at least to myself) that I can create stuff. It is far from perfection and there are still a lot of things that can be implemented, however, I am glad that it exists and can demonstrate some of my skills or potential."})]}),(0,P.jsxs)(I,{children:[(0,P.jsx)(z,{children:"Why Pokemons?"}),(0,P.jsx)(B,{children:"It started from a joke, and the joke got out of control. Surprisingly, it didn't go so badly, and in my opinion, it's always better to have some additional fun in a project that is supported only by your self-motivation (unfortunately, Nintendo did not pay me anything). PokeAPI proved to be an understandable and easy-to-work-with API. At the same time, it does have its cons and limitations, which provided valuable experience in problem-solving situations."})]}),(0,P.jsxs)(I,{children:[(0,P.jsx)(z,{children:"What was used?"}),(0,P.jsx)(B,{children:"At this stage of the project I have used:"}),(0,P.jsxs)(q,{children:[(0,P.jsx)(S,{children:(0,P.jsxs)("div",{children:[(0,P.jsx)(L,{href:"https://pokeapi.co/",children:"PokeAPI"}),"- to access Pokemon data;"]})}),(0,P.jsx)(S,{children:(0,P.jsxs)("div",{children:[(0,P.jsx)(L,{href:"https://tanstack.com/query/latest/",children:"TanStack"}),"- to help me deal with all tasks where fetching was involved;"]})}),(0,P.jsx)(S,{children:(0,P.jsxs)("div",{children:[(0,P.jsx)(L,{href:"https://reactrouter.com/en/main",children:"React Router"}),"- to make routing easier and more efficient;"]})}),(0,P.jsx)(S,{children:(0,P.jsxs)("div",{children:[(0,P.jsx)(L,{href:"https://styled-components.com/",children:"Styled Components"}),"- to change working with CSS in a more enjoyable way;"]})}),(0,P.jsx)(S,{children:(0,P.jsxs)("div",{children:[(0,P.jsx)(L,{href:"https://prettier.io/",children:"Prettier"}),"- to format all the written code to meet nice-looking standards."]})})]})]})]})]})}const C=k.ZP.div`
+"use strict";(self.webpackChunkwebpack_react=self.webpackChunkwebpack_react||[]).push([[826],{807:function(e,o,n){var r=n(294),t=n(745),i=n(379),a=n.n(i),s=n(795),d=n.n(s),c=n(569),l=n.n(c),p=n(565),x=n.n(p),u=n(216),g=n.n(u),h=n(589),f=n.n(h),b=n(434),m={};m.styleTagTransform=f(),m.setAttributes=x(),m.insert=l().bind(null,"head"),m.domAPI=d(),m.insertStyleElement=g(),a()(b.Z,m),b.Z&&b.Z.locals&&b.Z.locals;var k=n(763),j=n(655),y=n(250),w=n(965),v=n(202),P=n(893);function A(){return(0,P.jsxs)(C,{children:[(0,P.jsx)($,{children:"About"}),(0,P.jsxs)(Z,{children:[(0,P.jsxs)(I,{children:[(0,P.jsx)(z,{children:"What is this?"}),(0,P.jsx)(B,{children:"This is my home project that I decided to make from scratch to try something relatively complex and prove (at least to myself) that I can create stuff. It is far from perfection and there are still a lot of things that can be implemented, however, I am glad that it exists and can demonstrate some of my skills or potential."})]}),(0,P.jsxs)(I,{children:[(0,P.jsx)(z,{children:"Why Pokemons?"}),(0,P.jsx)(B,{children:"It started from a joke, and the joke got out of control. Surprisingly, it didn't go so badly, and in my opinion, it's always better to have some additional fun in a project that is supported only by your self-motivation (unfortunately, Nintendo did not pay me anything). PokeAPI proved to be an understandable and easy-to-work-with API. At the same time, it does have its cons and limitations, which provided valuable experience in problem-solving situations."})]}),(0,P.jsxs)(I,{children:[(0,P.jsx)(z,{children:"What was used?"}),(0,P.jsx)(B,{children:"At this stage of the project I have used:"}),(0,P.jsxs)(q,{children:[(0,P.jsx)(S,{children:(0,P.jsxs)("div",{children:[(0,P.jsx)(L,{href:"https://pokeapi.co/",children:"PokeAPI"}),"- to access Pokemon data;"]})}),(0,P.jsx)(S,{children:(0,P.jsxs)("div",{children:[(0,P.jsx)(L,{href:"https://tanstack.com/query/latest/",children:"TanStack"}),"- to help me deal with all tasks where fetching was involved;"]})}),(0,P.jsx)(S,{children:(0,P.jsxs)("div",{children:[(0,P.jsx)(L,{href:"https://reactrouter.com/en/main",children:"React Router"}),"- to make routing easier and more efficient;"]})}),(0,P.jsx)(S,{children:(0,P.jsxs)("div",{children:[(0,P.jsx)(L,{href:"https://styled-components.com/",children:"Styled Components"}),"- to change working with CSS in a more enjoyable way;"]})}),(0,P.jsx)(S,{children:(0,P.jsxs)("div",{children:[(0,P.jsx)(L,{href:"https://prettier.io/",children:"Prettier"}),"- to format all the written code to meet nice-looking standards."]})})]})]})]})]})}const C=k.ZP.div`
   display: flex;
   flex-direction: column;
   width: 600px;
@@ -467,16 +467,16 @@
     background-color: gainsboro;
     cursor: initial;
   }
-`;function xo(e,o){(0,r.useEffect)((()=>{function n(n){null===e.current||e.current.contains(n.target)||o(n)}return window.addEventListener("mousedown",n),window.addEventListener("touchstart",n),()=>{window.removeEventListener("mousedown",n),window.removeEventListener("touchstart",n)}}),[e,o])}function uo(e,o){const n=e.indexOf(o.toLowerCase()),r=e.substring(0,n),t=e.substring(n,n+o.length),i=e.substring(n+o.length);return(0,P.jsxs)("span",{children:[r&&U(r),(0,P.jsx)(yo,{children:r?t:U(t)}),i]})}const go=12;function ho(e){let{pokemonList:o,inputValue:n,setInputValue:t,suggestedList:i,setSuggestedList:a}=e;const[s,d]=(0,r.useState)(!1),c=(0,r.useRef)(null);function l(){d(!1)}function p(e){t(U(e)),a([e.toLowerCase()]),l()}return xo(c,l),(0,P.jsxs)(fo,{children:[(0,P.jsx)(bo,{value:n,type:"text",placeholder:"Please enter ID or name",onChange:function(e){const n=K(e.target.value,o),r=D(n,o.names).sort((function(e,o){return e.length-o.length}));(function(e){return/^[a-zA-Z0-9-]+$/.test(e)}(e.target.value)||""===e.target.value)&&t(e.target.value),function(e){d(""!==e)}(n),a(r)}}),s&&(0,P.jsx)(mo,{ref:c,children:0===i.length?(0,P.jsx)(jo,{children:"Pokemon not found"}):i.slice(0,go).map(((e,o)=>(0,P.jsx)(ko,{onClick:()=>p(e),children:uo(e,n)},o)))}),(0,P.jsx)(vo,{type:"button",onClick:function(){var e;p((e=o.names)[Math.floor(Math.random()*e.length)])},children:"🎲"})]})}const fo=k.ZP.div`
+`;function xo(e,o){(0,r.useEffect)((()=>{function n(n){null===e.current||e.current.contains(n.target)||o(n)}return window.addEventListener("mousedown",n),window.addEventListener("touchstart",n),()=>{window.removeEventListener("mousedown",n),window.removeEventListener("touchstart",n)}}),[e,o])}var uo=n.p+"9bd1c7f670e5120b1316.webp";function go(e,o){const n=e.indexOf(o.toLowerCase()),r=e.substring(0,n),t=e.substring(n,n+o.length),i=e.substring(n+o.length);return(0,P.jsxs)("span",{children:[r&&U(r),(0,P.jsx)(wo,{children:r?t:U(t)}),i]})}const ho=12;function fo(e){let{pokemonList:o,inputValue:n,setInputValue:t,suggestedList:i,setSuggestedList:a}=e;const[s,d]=(0,r.useState)(!1),c=(0,r.useRef)(null);function l(){d(!1)}function p(e){t(U(e)),a([e.toLowerCase()]),l()}return xo(c,l),(0,P.jsxs)(bo,{children:[(0,P.jsx)(mo,{value:n,type:"text",placeholder:"Please enter ID or name",onChange:function(e){const n=K(e.target.value,o),r=D(n,o.names).sort((function(e,o){return e.length-o.length}));(function(e){return/^[a-zA-Z0-9-]+$/.test(e)}(e.target.value)||""===e.target.value)&&t(e.target.value),function(e){d(""!==e)}(n),a(r)}}),s&&(0,P.jsx)(ko,{ref:c,children:0===i.length?(0,P.jsx)(yo,{children:"Pokemon not found"}):i.slice(0,ho).map(((e,o)=>(0,P.jsx)(jo,{onClick:()=>p(e),children:go(e,n)},o)))}),(0,P.jsx)(vo,{onClick:function(){var e;p((e=o.names)[Math.floor(Math.random()*e.length)])},children:(0,P.jsx)(Ao,{src:uo,alt:""})})]})}const bo=k.ZP.div`
   position: relative;
-`,bo=k.ZP.input`
+`,mo=k.ZP.input`
   padding: 5px 35px 5px 15px;
   border: solid gainsboro 1px;
   border-radius: 8px;
   width: 210px;
   box-sizing: border-box;
   font-size: 14px;
-`,mo=k.ZP.div`
+`,ko=k.ZP.div`
   position: absolute;
   padding: 3px 10px 3px 15px;
   border: solid gainsboro 1px;
@@ -486,7 +486,7 @@
   z-index: 100;
   width: 100%;
   box-sizing: border-box;
-`,ko=k.ZP.div`
+`,jo=k.ZP.div`
   padding: 3px 0 3px 0;
   font-size: 14px;
   cursor: pointer;
@@ -498,15 +498,20 @@
       margin-left: 8px;
     }
   }
-`,jo=k.ZP.div`
+`,yo=k.ZP.div`
   padding: 3px 0 3px 0;
   font-size: 14px;
   cursor: default;
   color: gray;
-`,yo=k.ZP.span`
+`,wo=k.ZP.span`
   font-weight: bold;
   color: #2fadd3;
-`,wo=k.F4`
+`,vo=k.ZP.div`
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin: 6px 10px 0 0;
+`,Po=k.F4`
   0% {
     transform: translateX(1px);
   }
@@ -522,24 +527,21 @@
   100% {
     transform: translateX(1px);
   }
-`,vo=k.ZP.button`
-  position: absolute;
-  top: 16%;
-  right: 0;
-  appearance: none;
-  padding: 0;
-  margin-right: 10px;
-  border: none;
-  background-color: transparent;
-  font-size: 15px;
+`,Ao=k.ZP.img`
+  width: 16px;
   cursor: pointer;
+  transition: all linear 0.3s;
 
   &:hover {
-    animation: 0.3s linear ${wo};
+    animation: 0.25s linear ${Po};
   }
-`,Po=["normal","fighting","flying","poison","ground","rock","bug","ghost","steel","fire","water","grass","electric","psychic","ice","dragon","dark","fairy"];function Ao(e){let{selectedType:o,setSelectedType:n}=e;const[t,i]=(0,r.useState)(!1),a=(0,r.useRef)(null);function s(){i(!1)}function d(e){n(e.target.textContent),s()}return xo(a,s),(0,P.jsxs)(Co,{ref:a,children:[(0,P.jsx)($o,{onClick:function(){i((e=>!e))},children:(0,P.jsx)(Zo,{$color:H[o?.toLowerCase()],$touched:o,children:o||"Choose a type"})}),t&&(0,P.jsx)(Io,{children:Po.map(((e,o)=>(0,P.jsx)(zo,{$color:H[e],onClick:d,children:U(e)},o)))})]})}const Co=k.ZP.div`
+
+  &:active {
+    transform: rotate(360deg);
+  }
+`,Co=["normal","fighting","flying","poison","ground","rock","bug","ghost","steel","fire","water","grass","electric","psychic","ice","dragon","dark","fairy"];function $o(e){let{selectedType:o,setSelectedType:n}=e;const[t,i]=(0,r.useState)(!1),a=(0,r.useRef)(null);function s(){i(!1)}function d(e){n(e.target.textContent),s()}return xo(a,s),(0,P.jsxs)(Zo,{ref:a,children:[(0,P.jsx)(Io,{onClick:function(){i((e=>!e))},children:(0,P.jsx)(zo,{$color:H[o?.toLowerCase()],$touched:o,children:o||"Choose a type"})}),t&&(0,P.jsx)(Bo,{children:Co.map(((e,o)=>(0,P.jsx)(qo,{$color:H[e],onClick:d,children:U(e)},o)))})]})}const Zo=k.ZP.div`
   position: relative;
-`,$o=k.ZP.div`
+`,Io=k.ZP.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -556,7 +558,7 @@
     color: gray;
     font-size: 12px;
   }
-`,Zo=k.ZP.span`
+`,zo=k.ZP.span`
   font-size: 14px;
   color: gray;
 
@@ -569,7 +571,7 @@
         margin-left: 8px;
       }
     `};
-`,Io=k.ZP.div`
+`,Bo=k.ZP.div`
   position: absolute;
   padding: 3px 10px 3px 15px;
   border: solid gainsboro 1px;
@@ -579,7 +581,7 @@
   z-index: 100;
   width: 100%;
   box-sizing: border-box;
-`,zo=k.ZP.div`
+`,qo=k.ZP.div`
   padding: 3px 0 3px 0;
   font-size: 14px;
   cursor: pointer;
@@ -591,7 +593,7 @@
       margin-left: 8px;
     }
   }
-`;function Bo(){const[e,o]=(0,r.useState)(""),[n,t]=(0,r.useState)([]),[i,a]=(0,r.useState)("Name"),[s,d]=(0,r.useState)(!1),c=(0,y.s0)(),l=(0,r.useRef)(null),{data:p}=(0,F.a)({queryFn:async function(){return _(await E())},queryKey:["allPokemons"]}),{refetch:x,isFetching:u}=(0,F.a)({queryFn:async function(){return(await T(e.toLowerCase())).species.name},queryKey:["defaultForm"],enabled:!1});function g(e){a(e.target.textContent),o("")}return xo(l,(function(){d(!1)})),(0,P.jsx)(P.Fragment,{children:(0,P.jsxs)(qo,{children:[(0,P.jsx)(So,{children:"Find your Pokemon!"}),"Name"===i?(0,P.jsx)(ho,{pokemonList:p,inputValue:e,setInputValue:o,suggestedList:n,setSuggestedList:t}):(0,P.jsx)(Ao,{selectedType:e,setSelectedType:o}),(0,P.jsx)(Lo,{type:"button",disabled:u,onClick:async function(){const r=n.length,a=K(e.toLowerCase(),p);""===e?c(`/catalog?query=${e.toLowerCase()}&option=${i.toLowerCase()}`):1===r&&"Name"===i?(await async function(o){const n=p.names.indexOf(e.toLowerCase()),r=p.ids.length,t=await x();c(n>r?`/pokedex?specie=${t.data}&form=${o}`:`/pokedex?specie=${t.data}`)}(a),t([])):c(`/catalog?query=${a}&option=${i.toLowerCase()}`),o("")},children:"Search"}),(0,P.jsxs)(Fo,{ref:l,children:[(0,P.jsx)(Eo,{onClick:function(){d((e=>!e))},children:i}),s&&(0,P.jsxs)(To,{children:[(0,P.jsx)(No,{onClick:g,children:"Name"}),(0,P.jsx)(No,{onClick:g,children:"Type"})]})]})]})})}const qo=k.ZP.div`
+`;function So(){const[e,o]=(0,r.useState)(""),[n,t]=(0,r.useState)([]),[i,a]=(0,r.useState)("Name"),[s,d]=(0,r.useState)(!1),c=(0,y.s0)(),l=(0,r.useRef)(null),{data:p}=(0,F.a)({queryFn:async function(){return _(await E())},queryKey:["allPokemons"]}),{refetch:x,isFetching:u}=(0,F.a)({queryFn:async function(){return(await T(e.toLowerCase())).species.name},queryKey:["defaultForm"],enabled:!1});function g(e){a(e.target.textContent),o("")}return xo(l,(function(){d(!1)})),(0,P.jsx)(P.Fragment,{children:(0,P.jsxs)(Lo,{children:[(0,P.jsx)(Fo,{children:"Find your Pokemon!"}),"Name"===i?(0,P.jsx)(fo,{pokemonList:p,inputValue:e,setInputValue:o,suggestedList:n,setSuggestedList:t}):(0,P.jsx)($o,{selectedType:e,setSelectedType:o}),(0,P.jsx)(Eo,{type:"button",disabled:u,onClick:async function(){const r=n.length,a=K(e.toLowerCase(),p);""===e?c(`/catalog?query=${e.toLowerCase()}&option=${i.toLowerCase()}`):1===r&&"Name"===i?(await async function(o){const n=p.names.indexOf(e.toLowerCase()),r=p.ids.length,t=await x();c(n>r?`/pokedex?specie=${t.data}&form=${o}`:`/pokedex?specie=${t.data}`)}(a),t([])):c(`/catalog?query=${a}&option=${i.toLowerCase()}`),o("")},children:"Search"}),(0,P.jsxs)(To,{ref:l,children:[(0,P.jsx)(No,{onClick:function(){d((e=>!e))},children:i}),s&&(0,P.jsxs)(Uo,{children:[(0,P.jsx)(Wo,{onClick:g,children:"Name"}),(0,P.jsx)(Wo,{onClick:g,children:"Type"})]})]})]})})}const Lo=k.ZP.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -599,9 +601,9 @@
   padding: 5px 15px 5px 15px;
   border-radius: 12px;
   background-color: ${R};
-`,So=k.ZP.span`
+`,Fo=k.ZP.span`
   font-size: 15px;
-`,Lo=k.ZP.button`
+`,Eo=k.ZP.button`
   padding: 5px 10px 5px 10px;
   border-radius: 8px;
   cursor: pointer;
@@ -611,9 +613,9 @@
   &:hover {
     background-color: gainsboro;
   }
-`,Fo=k.ZP.div`
+`,To=k.ZP.div`
   position: relative;
-`,Eo=(0,k.ZP)(Lo)`
+`,No=(0,k.ZP)(Eo)`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -628,7 +630,7 @@
     color: gray;
     font-size: 12px;
   }
-`,To=k.ZP.div`
+`,Uo=k.ZP.div`
   position: absolute;
   padding: 3px 10px 3px 10px;
   border: solid gainsboro 1px;
@@ -638,7 +640,7 @@
   z-index: 100;
   width: 100%;
   box-sizing: border-box;
-`,No=k.ZP.div`
+`,Wo=k.ZP.div`
   padding: 3px 0 3px 0;
   font-size: 14px;
   cursor: pointer;
@@ -650,11 +652,11 @@
       margin-left: 8px;
     }
   }
-`;function Uo(){return(0,P.jsx)(Wo,{children:(0,P.jsxs)(Oo,{children:[(0,P.jsxs)(_o,{children:[(0,P.jsx)(Ko,{$backgroundColor:"#8fbc8f",to:"/",children:"Home"}),(0,P.jsx)(Ko,{$backgroundColor:"#ff4c4c",to:"/pokedex?specie=bulbasaur",children:"Pokedex"}),(0,P.jsx)(Ko,{$backgroundColor:"#2fadd3",to:"/catalog",children:"Catalog"})]}),(0,P.jsx)(Bo,{})]})})}const Wo=k.ZP.div`
+`;function Oo(){return(0,P.jsx)(_o,{children:(0,P.jsxs)(Ko,{children:[(0,P.jsxs)(Do,{children:[(0,P.jsx)(Ro,{$backgroundColor:"#8fbc8f",to:"/",children:"Home"}),(0,P.jsx)(Ro,{$backgroundColor:"#ff4c4c",to:"/pokedex?specie=bulbasaur",children:"Pokedex"}),(0,P.jsx)(Ro,{$backgroundColor:"#2fadd3",to:"/catalog",children:"Catalog"})]}),(0,P.jsx)(So,{})]})})}const _o=k.ZP.div`
   background-color: ${V};
   width: 100%;
   z-index: 101;
-`,Oo=k.ZP.div`
+`,Ko=k.ZP.div`
   width: 600px;
   margin-left: 20px;
   padding: 0 25px 15px 25px;
@@ -663,10 +665,10 @@
   border-bottom-left-radius: 12px;
   border-bottom-right-radius: 12px;
   box-sizing: border-box;
-`,_o=k.ZP.div`
+`,Do=k.ZP.div`
   display: flex;
   justify-content: space-between;
-`,Ko=(0,k.ZP)(j.OL)`
+`,Ro=(0,k.ZP)(j.OL)`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -694,26 +696,26 @@
     background-color: #f1c91f;
     outline-color: #f1c91f;
   }
-`;function Do(){return(0,P.jsxs)(Ro,{children:[(0,P.jsx)(Vo,{children:"Page not found"}),(0,P.jsx)(Xo,{children:"The url address was entered incorrectly or the page no longer exist"})]})}const Ro=k.ZP.div`
+`;function Vo(){return(0,P.jsxs)(Xo,{children:[(0,P.jsx)(Ho,{children:"Page not found"}),(0,P.jsx)(Mo,{children:"The url address was entered incorrectly or the page no longer exist"})]})}const Xo=k.ZP.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 600px;
   margin: 70px auto;
-`,Vo=k.ZP.div`
+`,Ho=k.ZP.div`
   margin: 40px 30px 0 30px;
   font-size: 28px;
   font-weight: bold;
-`,Xo=k.ZP.div`
+`,Mo=k.ZP.div`
   margin-top: 50px;
   font-size: 18px;
   font-weight: normal;
   text-align: center;
-`,Ho=new w.S;var Mo=function(){return(0,P.jsx)(v.aH,{client:Ho,children:(0,P.jsx)(j.VK,{basename:"/Poke.js",children:(0,P.jsxs)(Qo,{children:[(0,P.jsx)(Uo,{}),(0,P.jsxs)(y.Z5,{children:[(0,P.jsx)(y.AW,{path:"/",element:(0,P.jsx)(A,{})}),(0,P.jsx)(y.AW,{path:"/pokedex",element:(0,P.jsx)(Ae,{})}),(0,P.jsx)(y.AW,{path:"/catalog",element:(0,P.jsx)(oo,{})}),(0,P.jsx)(y.AW,{path:"*",element:(0,P.jsx)(Do,{})})]})]})})})};const Qo=k.ZP.div`
+`,Qo=new w.S;var Yo=function(){return(0,P.jsx)(v.aH,{client:Qo,children:(0,P.jsx)(j.VK,{children:(0,P.jsxs)(Go,{children:[(0,P.jsx)(Oo,{}),(0,P.jsxs)(y.Z5,{children:[(0,P.jsx)(y.AW,{path:"/",element:(0,P.jsx)(A,{})}),(0,P.jsx)(y.AW,{path:"/pokedex",element:(0,P.jsx)(Ae,{})}),(0,P.jsx)(y.AW,{path:"/catalog",element:(0,P.jsx)(oo,{})}),(0,P.jsx)(y.AW,{path:"*",element:(0,P.jsx)(Vo,{})})]})]})})})};const Go=k.ZP.div`
   font-family: "Roboto", sans-serif;
   background-color: whitesmoke;
   color: #282c34;
   min-height: 100vh;
   overflow: visible;
-`;(0,t.s)(document.getElementById("root")).render((0,P.jsx)(r.StrictMode,{children:(0,P.jsx)(Mo,{})}))},434:function(e,o,n){var r=n(537),t=n.n(r),i=n(645),a=n.n(i)()(t());a.push([e.id,'html, body, div, span, applet, object, iframe,\r\nh1, h2, h3, h4, h5, h6, p, blockquote, pre,\r\na, abbr, acronym, address, big, cite, code,\r\ndel, dfn, em, font, img, ins, kbd, q, s, samp,\r\nsmall, strike, strong, sub, sup, tt, var,\r\ndl, dt, dd, ol, ul, li,\r\nfieldset, form, label, legend,\r\ntable, caption, tbody, tfoot, thead, tr, th, td {\r\n    margin: 0;\r\n    padding: 0;\r\n    border: 0;\r\n    outline: 0;\r\n    font-weight: inherit;\r\n    font-style: inherit;\r\n    font-size: 100%;\r\n    font-family: inherit;\r\n    vertical-align: baseline;\r\n}\r\n\r\n:focus {\r\n    outline: 0;\r\n}\r\nbody {\r\n    color: black;\r\n    background: white;\r\n    overflow-x: hidden;\r\n}\r\nol, ul {\r\n    list-style: none;\r\n}\r\n\r\ntable {\r\n    border-collapse: separate;\r\n    border-spacing: 0;\r\n}\r\ncaption, th, td {\r\n    text-align: left;\r\n    font-weight: normal;\r\n}\r\nblockquote:before, blockquote:after,\r\nq:before, q:after {\r\n    content: "";\r\n}\r\nblockquote, q {\r\n    quotes: "" "";\r\n}',"",{version:3,sources:["webpack://./src/styles/reset.css"],names:[],mappings:"AAAA;;;;;;;;IAQI,SAAS;IACT,UAAU;IACV,SAAS;IACT,UAAU;IACV,oBAAoB;IACpB,mBAAmB;IACnB,eAAe;IACf,oBAAoB;IACpB,wBAAwB;AAC5B;;AAEA;IACI,UAAU;AACd;AACA;IACI,YAAY;IACZ,iBAAiB;IACjB,kBAAkB;AACtB;AACA;IACI,gBAAgB;AACpB;;AAEA;IACI,yBAAyB;IACzB,iBAAiB;AACrB;AACA;IACI,gBAAgB;IAChB,mBAAmB;AACvB;AACA;;IAEI,WAAW;AACf;AACA;IACI,aAAa;AACjB",sourcesContent:['html, body, div, span, applet, object, iframe,\r\nh1, h2, h3, h4, h5, h6, p, blockquote, pre,\r\na, abbr, acronym, address, big, cite, code,\r\ndel, dfn, em, font, img, ins, kbd, q, s, samp,\r\nsmall, strike, strong, sub, sup, tt, var,\r\ndl, dt, dd, ol, ul, li,\r\nfieldset, form, label, legend,\r\ntable, caption, tbody, tfoot, thead, tr, th, td {\r\n    margin: 0;\r\n    padding: 0;\r\n    border: 0;\r\n    outline: 0;\r\n    font-weight: inherit;\r\n    font-style: inherit;\r\n    font-size: 100%;\r\n    font-family: inherit;\r\n    vertical-align: baseline;\r\n}\r\n\r\n:focus {\r\n    outline: 0;\r\n}\r\nbody {\r\n    color: black;\r\n    background: white;\r\n    overflow-x: hidden;\r\n}\r\nol, ul {\r\n    list-style: none;\r\n}\r\n\r\ntable {\r\n    border-collapse: separate;\r\n    border-spacing: 0;\r\n}\r\ncaption, th, td {\r\n    text-align: left;\r\n    font-weight: normal;\r\n}\r\nblockquote:before, blockquote:after,\r\nq:before, q:after {\r\n    content: "";\r\n}\r\nblockquote, q {\r\n    quotes: "" "";\r\n}'],sourceRoot:""}]),o.Z=a}},function(e){e.O(0,[216],(function(){return 954,e(e.s=954)})),e.O()}]);
-//# sourceMappingURL=index.b6904afea9b8d3aa05f17601aee7f8dc.bundle.js.map
+`;(0,t.s)(document.getElementById("root")).render((0,P.jsx)(r.StrictMode,{children:(0,P.jsx)(Yo,{})}))},434:function(e,o,n){var r=n(537),t=n.n(r),i=n(645),a=n.n(i)()(t());a.push([e.id,'html, body, div, span, applet, object, iframe,\r\nh1, h2, h3, h4, h5, h6, p, blockquote, pre,\r\na, abbr, acronym, address, big, cite, code,\r\ndel, dfn, em, font, img, ins, kbd, q, s, samp,\r\nsmall, strike, strong, sub, sup, tt, var,\r\ndl, dt, dd, ol, ul, li,\r\nfieldset, form, label, legend,\r\ntable, caption, tbody, tfoot, thead, tr, th, td {\r\n    margin: 0;\r\n    padding: 0;\r\n    border: 0;\r\n    outline: 0;\r\n    font-weight: inherit;\r\n    font-style: inherit;\r\n    font-size: 100%;\r\n    font-family: inherit;\r\n    vertical-align: baseline;\r\n}\r\n\r\n:focus {\r\n    outline: 0;\r\n}\r\nbody {\r\n    color: black;\r\n    background: white;\r\n    overflow-x: hidden;\r\n}\r\nol, ul {\r\n    list-style: none;\r\n}\r\n\r\ntable {\r\n    border-collapse: separate;\r\n    border-spacing: 0;\r\n}\r\ncaption, th, td {\r\n    text-align: left;\r\n    font-weight: normal;\r\n}\r\nblockquote:before, blockquote:after,\r\nq:before, q:after {\r\n    content: "";\r\n}\r\nblockquote, q {\r\n    quotes: "" "";\r\n}',"",{version:3,sources:["webpack://./src/styles/reset.css"],names:[],mappings:"AAAA;;;;;;;;IAQI,SAAS;IACT,UAAU;IACV,SAAS;IACT,UAAU;IACV,oBAAoB;IACpB,mBAAmB;IACnB,eAAe;IACf,oBAAoB;IACpB,wBAAwB;AAC5B;;AAEA;IACI,UAAU;AACd;AACA;IACI,YAAY;IACZ,iBAAiB;IACjB,kBAAkB;AACtB;AACA;IACI,gBAAgB;AACpB;;AAEA;IACI,yBAAyB;IACzB,iBAAiB;AACrB;AACA;IACI,gBAAgB;IAChB,mBAAmB;AACvB;AACA;;IAEI,WAAW;AACf;AACA;IACI,aAAa;AACjB",sourcesContent:['html, body, div, span, applet, object, iframe,\r\nh1, h2, h3, h4, h5, h6, p, blockquote, pre,\r\na, abbr, acronym, address, big, cite, code,\r\ndel, dfn, em, font, img, ins, kbd, q, s, samp,\r\nsmall, strike, strong, sub, sup, tt, var,\r\ndl, dt, dd, ol, ul, li,\r\nfieldset, form, label, legend,\r\ntable, caption, tbody, tfoot, thead, tr, th, td {\r\n    margin: 0;\r\n    padding: 0;\r\n    border: 0;\r\n    outline: 0;\r\n    font-weight: inherit;\r\n    font-style: inherit;\r\n    font-size: 100%;\r\n    font-family: inherit;\r\n    vertical-align: baseline;\r\n}\r\n\r\n:focus {\r\n    outline: 0;\r\n}\r\nbody {\r\n    color: black;\r\n    background: white;\r\n    overflow-x: hidden;\r\n}\r\nol, ul {\r\n    list-style: none;\r\n}\r\n\r\ntable {\r\n    border-collapse: separate;\r\n    border-spacing: 0;\r\n}\r\ncaption, th, td {\r\n    text-align: left;\r\n    font-weight: normal;\r\n}\r\nblockquote:before, blockquote:after,\r\nq:before, q:after {\r\n    content: "";\r\n}\r\nblockquote, q {\r\n    quotes: "" "";\r\n}'],sourceRoot:""}]),o.Z=a}},function(e){e.O(0,[216],(function(){return 807,e(e.s=807)})),e.O()}]);
+//# sourceMappingURL=index.22104f59c426cfd077bf23045b19b63e.bundle.js.map
