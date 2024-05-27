@@ -282,6 +282,7 @@ const IdWrapper = styled.div`
 
 const PokemonId = styled.div`
   font-size: 160px;
+  line-height: 1;
   color: ${mainBackgroundColor};
   opacity: 0.33;
 `;
@@ -319,7 +320,7 @@ const PokemonName = styled.h3`
   text-align: center;
   font-size: 30px;
   font-weight: bold;
-  margin-bottom: 10px;
+  line-height: 1;
 `;
 
 const PokemonFormsWrapper = styled.div`
@@ -375,11 +376,10 @@ const GeneralInfo = styled.div`
   background-color: ${(props) => props.$backgroundColor};
   border-radius: 12px;
   padding: 20px 30px 20px 30px;
-  margin-top: 10px;
+  margin-top: 20px;
 `;
 
 const DescriptionWrapper = styled.div`
-  height: 80px;
   margin: 10px;
   color: white;
 `;
@@ -474,7 +474,7 @@ const PokemonAbilities = styled.div`
 `;
 
 const StatsWrapper = styled.div`
-  margin: 20px 20px 20px 20px;
+  margin: 20px 20px 0 20px;
   width: 560px;
 `;
 
@@ -509,7 +509,7 @@ const statsAppear = keyframes`
 `;
 
 const StatColumn = styled.div`
-  width: 60px;
+  width: 65px;
   height: ${(props) => props.$height};
   border-radius: 5px;
   background-color: ${(props) => props.$backgroundColor};
