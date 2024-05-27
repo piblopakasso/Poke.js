@@ -19,6 +19,7 @@ import PokemonAbility from "../components/PokemonAbility";
 import LoadingCircle from "../components/LoadingCircle";
 import ErrorPage from "./ErrorPage";
 import NavigationArrows from "../components/NavigationArrows";
+import EvolutionChain from "../components/EvolutionChain";
 import { useSearchParams } from "react-router-dom";
 
 async function getPokemonFormsData(arr) {
@@ -79,6 +80,7 @@ export default function Pokedex() {
         name: specie.name.toUpperCase(),
         description: findPokemonDescription(specie.flavor_text_entries),
         defaultForm: specie.varieties[0].pokemon.name,
+        evolution: specie.evolution_chain.url,
         forms: forms,
       };
     },
@@ -259,6 +261,8 @@ export default function Pokedex() {
             <StatName>Speed</StatName>
           </StatsNameWrapper>
         </StatsWrapper>
+
+        <EvolutionChain chainUrl={pokemonData.evolution} />
       </PokemonInfo>
     </>
   );
@@ -498,7 +502,7 @@ const StatColumnWrapper = styled.div`
   background-color: #dcdcdc;
 `;
 
-const statsAppear = keyframes` //to animate first appearance of stats
+const statsAppear = keyframes`
   from {
     height: 0;
   }

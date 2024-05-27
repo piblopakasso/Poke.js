@@ -26,3 +26,8 @@ export async function getTypeData(value: string) {
   const response = await fetch(`https://pokeapi.co/api/v2/type/${value}`);
   return response.json();
 }
+
+export async function getData(value: string) {
+  const response = await fetch(value);
+  return response.json();
+}
