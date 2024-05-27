@@ -59,7 +59,7 @@ export default function EvolutionChain({ chainUrl }: { chainUrl: string }) {
       return chainSpecies.map((item) => ({
         formName: item.forms[0].name,
         name: item.species.name,
-        id: formatId(item.id.toString()),
+        id: formatId(item.id),
         image: item.sprites["front_default"],
       }));
     },

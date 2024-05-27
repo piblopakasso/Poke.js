@@ -71,7 +71,7 @@ export default function Catalog() {
       return pokemons.map((pokemon) => ({
         formName: pokemon.name.toUpperCase(),
         specieName: pokemon.species.name.toUpperCase(),
-        formId: formatId(pokemon.id.toString()),
+        formId: formatId(pokemon.id),
         image: pokemon.sprites["front_default"],
         types: findValue(pokemon.types, "type", "name"),
       }));

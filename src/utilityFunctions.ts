@@ -8,9 +8,10 @@ export function capitalizeFirstLetter(text: string) {
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
-export function formatId(id: string) {
-  const str = `000${id}`;
-  return id.length === 5 ? str.slice(-5) : str.slice(-4);
+export function formatId(id: number) {
+  const strId = id.toString();
+  const str = `000${strId}`;
+  return strId.length === 5 ? str.slice(-5) : str.slice(-4);
 }
 
 export function removeDuplicate(arr: string[]) {
