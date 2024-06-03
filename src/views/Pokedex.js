@@ -15,7 +15,7 @@ import {
   additionalAccentColor,
   colors,
 } from "../appColors";
-import PokemonAbility from "../components/PokemonAbility";
+import PokemonAbilities from "../components/PokemonAbilities";
 import LoadingCircle from "../components/LoadingCircle";
 import ErrorPage from "./ErrorPage";
 import NavigationArrows from "../components/NavigationArrows";
@@ -127,22 +127,6 @@ export default function Pokedex() {
     setFormsListShown((formsListShown) => !formsListShown);
   }
 
-  function hideAbilityDescription() {
-    setAbilityDescription((prevState) => ({
-      ...prevState,
-      shown: false,
-      name: null,
-    }));
-  }
-
-  function showAbilityDescription(e) {
-    setAbilityDescription((prevState) => ({
-      ...prevState,
-      shown: true,
-      name: e.target.textContent.toLowerCase(),
-    }));
-  }
-
   if (isLoading) {
     return <LoadingCircle />;
   }
@@ -221,24 +205,7 @@ export default function Pokedex() {
           ))}
         </TypesWrapper>
 
-        <AbilitiesWrapper>
-          <h4>Abilities</h4>
-          {selectedFormData.abilities.map((text, index) => (
-            <PokemonAbilities
-              $touched={abilityDescription.shown}
-              key={index}
-              onClick={(e) => showAbilityDescription(e)}
-            >
-              {capitalizeFirstLetter(text)}
-            </PokemonAbilities>
-          ))}
-          {abilityDescription.shown && (
-            <PokemonAbility
-              abilityName={abilityDescription.name}
-              hideDescription={hideAbilityDescription}
-            />
-          )}
-        </AbilitiesWrapper>
+        <PokemonAbilities abilities={selectedFormData.abilities} />
 
         <StatsWrapper>
           Stats
@@ -449,27 +416,6 @@ const PokemonTypes = styled.div`
       props.$backgroundColor === colors.psychic) &&
     css`
       color: white;
-    `};
-`;
-
-const AbilitiesWrapper = styled.div`
-  position: relative;
-  margin: 20px 20px 0 20px;
-`;
-
-const PokemonAbilities = styled.div`
-  display: inline-block;
-  padding: 10px;
-  margin: 10px 10px 0 0;
-  border-radius: 12px;
-  color: white;
-  background-color: ${mainAccentColor};
-  cursor: pointer;
-
-  ${(props) =>
-    props.$touched &&
-    css`
-      display: none;
     `};
 `;
 

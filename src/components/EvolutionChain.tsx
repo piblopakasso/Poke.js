@@ -5,7 +5,11 @@ import { useNavigate } from "react-router-dom";
 
 import { getData } from "../fetchFunctions";
 import { capitalizeFirstLetter, formatId } from "../utilityFunctions";
-import { mainAccentColor, mainBackgroundColor } from "../appColors";
+import {
+  mainAccentColor,
+  additionalAccentColor,
+  mainBackgroundColor,
+} from "../appColors";
 
 type EvolutionChain = {
   evolves_to: EvolutionChain[];
@@ -151,7 +155,7 @@ const ChainSpecieImage = styled.img`
   width: 100px;
   height: 100px;
   background-color: ${mainBackgroundColor};
-  border: solid 5px #dcdcdc;
+  border: solid 5px ${additionalAccentColor};
   border-radius: 50%;
   padding: 5px;
   margin-bottom: 10px;
@@ -169,5 +173,5 @@ const Arrow = styled.div`
   height: 0;
   border-top: 20px solid transparent;
   border-bottom: 20px solid transparent;
-  border-left: 20px solid #dcdcdc;
+  border-left: 20px solid ${additionalAccentColor};
 `;
