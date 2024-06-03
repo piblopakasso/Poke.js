@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import styled, { css, keyframes } from "styled-components";
 
 import { getAbilityData } from "../fetchFunctions";
 import { capitalizeFirstLetter } from "../utilityFunctions";
 import { additionalAccentColor, mainAccentColor } from "../appColors";
-import styled, { css, keyframes } from "styled-components";
 
 type AbilityDescriptionState = {
   shown: boolean;

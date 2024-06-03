@@ -9,33 +9,40 @@ import Pokedex from "../../views/Pokedex";
 import Catalog from "../../views/Catalog";
 import Navigation from "../Navigation";
 import PageNotFound from "../../views/PageNotFound";
+import Footer from "../Footer";
 
 const queryClient = new QueryClient();
 
-function App() {
+export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <StyledApp>
           <Navigation />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/pokedex" element={<Pokedex />} />
-            <Route path="/catalog" element={<Catalog />} />
-            <Route path="*" element={<PageNotFound />} />
-          </Routes>
+          <Main>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/pokedex" element={<Pokedex />} />
+              <Route path="/catalog" element={<Catalog />} />
+              <Route path="*" element={<PageNotFound />} />
+            </Routes>
+          </Main>
+          <Footer />
         </StyledApp>
       </BrowserRouter>
     </QueryClientProvider>
   );
 }
 
-export default App;
-
 const StyledApp = styled.div`
   font-family: "Roboto", sans-serif;
   background-color: whitesmoke;
   color: #282c34;
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
-  overflow: visible;
+`;
+
+const Main = styled.div`
+  margin-bottom: 60px;
 `;
