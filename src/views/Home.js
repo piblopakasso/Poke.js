@@ -50,7 +50,7 @@ export default function Home() {
             <ListItem>
               <div>
                 <TechLink href="https://tanstack.com/query/latest/">
-                  TanStack
+                  TanStack Query
                 </TechLink>
                 - to help me deal with all tasks where fetching was involved;
               </div>
